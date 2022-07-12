@@ -33,13 +33,13 @@ function FormikContainer() {
         email: Yup.string().required('Required'),
         description: Yup.string().required('Required'),
         selectOption: Yup.string().required('Required'),
-        radioOption: Yup.string().required('Required'),
+        radioOption: Yup.array().required('Required'),
         checkboxOption: Yup.array().required('Required'),
         birthDate: Yup.date().required('Required').nullable()
     })
     const onSubmit = values => console.log('Form data',values)
   return (
-    <Formik>
+    <Formik >
         {formik =>(
             <Form>
                 <FormikControl 
@@ -62,7 +62,7 @@ function FormikContainer() {
                 <FormikControl
                     control = 'radio'
                     label='Radio topic'
-                    name='radioOption'
+                    name='radioOptions'
                     options={radioOptions}
                 />
                 <FormikControl

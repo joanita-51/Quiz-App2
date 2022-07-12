@@ -17,23 +17,25 @@ Props..
 const Radio = (props) => {
     const {label, name, options, ...rest} = props
   return (
-    <div className='form-control'>
-        <label>{label}</label>
-        <Field name={name} {...rest}>
+    <div >
+        <label className='block mx-12 mt-8'>{label}</label>
+        <Field name={name} {...rest} >
             {
                 ({field})=>{
                     return options.map(option=>{
-                        <React.Fragment key={option.key}>
-                            <input
+                        return(
+                        <React.Fragment key={option.key} >
+                            <input 
+                                className='mx-12' 
                                 type='radio'
-                                id = {option.value}
+                                id = {option.id}
                                 {...field}
                                 value = {option.value}
                                 checked={field.value === option.value}
                             />
-                            <label htmlFor={option.value}>{option.key}</label>
+                            <label htmlFor={option.id}>{option.key}</label>
                         </React.Fragment>
-                    })
+                    )})
                 }
             }
         </Field>

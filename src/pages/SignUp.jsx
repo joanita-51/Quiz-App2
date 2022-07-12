@@ -6,7 +6,7 @@ import FormikControl from './Form/FormikControl'
 const SignUp = () => {
   const options =[
     {key: 'Email', value:'emailmoc'},
-    {key: 'Telephone', value:'telephonemoc'}
+    {key: 'Telephone', value:'telephonemoc'},
   ]
   const initialValues ={
     email: '',
@@ -19,8 +19,8 @@ const SignUp = () => {
     email: Yup.string().email('Invalid email format').required('Required'),
     password: Yup.string().required('Required'),
     confirmPassword: Yup.string().oneOf([Yup.ref('password'),''], 'Passwords must match').required('Required'),
-    modeOfContact:Yup.String().required('Required'),
-    phone: Yup.string().when('modeofContact',{is: 'telephonemoc', then: Yup.string().required('Required')})
+    modeOfContact:Yup.string().required('Required'),
+    phone: Yup.string().when('modeOfContact',{is: 'telephonemoc', then: Yup.string().required('Required')})
   })
 
   const onSubmit = values => {
@@ -53,7 +53,7 @@ const SignUp = () => {
               />
               <FormikControl
                 control = 'radio'
-                label = 'Mode of contact'
+                label = 'Mode of contact:  '
                 name = 'modeOfContact'
                 options = {options}
               />
@@ -63,7 +63,7 @@ const SignUp = () => {
                 label = 'Phone number'
                 name = 'phone'
               />
-              <button type ='submit' disabled={!formik.isValid}>Submit</button>
+              <button type ='submit'  className='rounded-full border-2 mx-11 my-3 mt-6 px-11 py-2 border-indigo-600 text-white bg-indigo-900 hover:bg-indigo-400' disabled={!formik.isValid}>Submit</button>
             </Form>
           )
         }
