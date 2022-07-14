@@ -1,26 +1,33 @@
 import React from 'react';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import {Button, Footer, Header, Navbar, Sidebar, UserProfile} from './components';
+import SidebarLayout from './components/SidebarLayout';
 import {Dashboard, Landing, Login, Logout, Notifications, Profile, Results, SignUp} from './pages'
 
 function App() {
+  const activeMenu = true;
   return (
-    <div>
-     <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<Landing/>}/>
-        <Route path='/signup' element={<SignUp/>}/>
-        <Route path='/login' element={<Login/>}/>
+    <BrowserRouter>
+      <div className='flex '>
+        <Routes>
+          <Route element={<SidebarLayout/>}>
+            {/* Dashboard pages */}
+            <Route path='/Dashboard' element={<Dashboard/>}/>
+            <Route path='/Results' element={<Results/>}/>
+            <Route path='/Notifications' element={<Notifications/>}/>
+            <Route path='/Profile' element={<Profile/>}/>
+            <Route path='/Logout' element={<Logout/>}/>
+          </Route>
 
-        {/* Dashboard pages */}
-        <Route path='/dashboard' element={<Dashboard/>}/>
-        <Route path='/results' element={<Results/>}/>
-        <Route path='/notifications' element={<Notifications/>}/>
-        <Route path='/profile' element={<Profile/>}/>
-        <Route path='/logout' element={<Logout/>}/>
-      </Routes>
-     </BrowserRouter>
-    </div>
+          <Route path='/' element={<Landing/>}/>
+          <Route path='/signup' element={<SignUp/>}/>
+          <Route path='/login' element={<Login/>}/>
+        
+        </Routes>
+      </div>
+
+    </BrowserRouter>
+ 
   );
 }
 
