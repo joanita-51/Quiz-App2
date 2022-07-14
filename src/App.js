@@ -3,12 +3,17 @@ import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import {Button, Footer, Header, Navbar, Sidebar, UserProfile} from './components';
 import SidebarLayout from './components/SidebarLayout';
 import {Dashboard, Landing, Login, Logout, Notifications, Profile, Results, SignUp} from './pages'
+import './App.css'
+
+import {useStateContext} from './components/contexts/ContextProvider';
 
 function App() {
-  const activeMenu = true;
+  const {activeMenu} = useStateContext()
+ 
   return (
     <BrowserRouter>
-      <div className='flex '>
+      <div className='flex relative'>
+   
         <Routes>
           <Route element={<SidebarLayout/>}>
             {/* Dashboard pages */}
