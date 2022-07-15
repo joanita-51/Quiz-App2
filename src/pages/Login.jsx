@@ -3,6 +3,7 @@ import {Formik, Form} from 'formik'
 import * as Yup from 'yup'
 import FormikControl from './Form/FormikControl'
 
+
 const Login = () => {
   const initialValues ={
     email : '',
@@ -16,7 +17,9 @@ const Login = () => {
 
   const onSubmit = values => {
     console.log('Form data', values)
+   
   }
+ 
   return (
     <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit} >
       {
@@ -35,6 +38,7 @@ const Login = () => {
                 label='Password'
                 name='password'
               />
+            
               <button type='submit' disabled={!formik.isValid} className='rounded-full border-2 mx-11 my-3 mt-6 px-11 py-2 border-indigo-600 text-white bg-indigo-900 hover:bg-indigo-400'>Submit</button>
             </Form>
           
