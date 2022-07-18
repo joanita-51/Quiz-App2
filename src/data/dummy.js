@@ -130,3 +130,32 @@ export const studentResults =[
         QuestionsAttempted:'30/30'
     },
 ]
+
+export const studentResultsGrid = [
+    {
+        field:'CourseName',
+        headerText:'Course Name',
+        textAlign:'Left',
+        width:'150',
+        isPrimaryKey:true,
+    },
+    {
+        field:'AttemptedDate',
+        headerText:'Attempted Date',
+        textAlign:'Left',
+        width:'150',
+        format:'yMd'
+    },
+    {
+        field:'ScoreEarned',
+        headerText:'Score Earned',
+        textAlign:'Left',
+        width:'150'
+    },
+    {
+        field:'QuestionsAttempted',
+        headerText:'Questions Attempted',
+        textAlign:'Left',
+        width:'150'
+    },
+]

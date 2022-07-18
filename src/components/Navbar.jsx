@@ -10,7 +10,7 @@ import { useStateContext } from './contexts/ContextProvider'
 const Navbar = () => {
   const {activeMenu, setActiveMenu} = useStateContext()
   return (
-    <div className=' w-full h-24 sticky top-0 z-auto bg-white drop-shadow-sm'>
+    <div className=' w-full h-24 sticky top-0 navbar bg-white drop-shadow-sm'>
 
       <div className='h-full flex justify-between items-center'>
         

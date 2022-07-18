@@ -1,20 +1,32 @@
 import React from 'react'
-import { Navbar } from '../components'
+import { Header, Navbar } from '../components'
 import { GridComponent, ColumnsDirective,ColumnDirective,Page,Selection,Inject,Edit,Toolbar,Sort,Filter } from '@syncfusion/ej2-react-grids'
-import { studentResults } from '../data/dummy'
-
+import { studentResults, studentResultsGrid } from '../data/dummy'
+import { BiSearch } from 'react-icons/bi'
 const Results = () => {
   return (
     <div className='w-full'>
       <Navbar/>
-      <GridComponent
-        dataSource={studentResults}
-        allowPaging
-        allowSorting
-        width='auto'
-      >
+      <div className='m-2 p-2 rounded-lg mt-12'>
+        <Header title='Results' size={(Object.keys(studentResults)).length} />
+        <GridComponent
+          dataSource={studentResults}
+          allowPaging = {true}
+          pageSettings={{pageSize:5}}
+          allowSorting = {true}
+        
+          width='auto'
+        >
+        <ColumnsDirective>
+          {studentResultsGrid.map((result,index)=>(
+            <ColumnDirective key={index} {...result}/>
+          ))}
+        </ColumnsDirective>
 
-      </GridComponent>
+        <Inject services={[Page, Filter, Sort]}/>
+        </GridComponent>
+      </div>
+
     </div>
   )
 }

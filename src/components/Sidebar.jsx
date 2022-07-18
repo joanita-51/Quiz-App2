@@ -14,9 +14,9 @@ const Sidebar = () => {
     <div>
         
         {activeMenu ? (
-          <div className='h-screen overflow-auto pb-10 bg-blue-900'>
+          <div className='h-screen overflow-auto pb-10 bg-blue-900 md:overflow-hidden sidebar'>
       
-            <div className='flex items-center justify-between mt-5 ml-4'>
+            <div className='flex items-center justify-between mt-5 ml-4 ' >
               <Link to='/dashboard' onClick={()=>{}}>
                 <img src={logo} alt=" Logo" className='w-64' />
               </Link>

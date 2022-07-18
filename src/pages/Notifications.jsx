@@ -1,8 +1,11 @@
 import React from 'react'
+import { Navbar } from '../components'
 
 const Notifications = () => {
   return (
-    <div>Notifications</div>
+    <div className='w-full'>
+      <Navbar/>
+    </div>
   )
 }
 
