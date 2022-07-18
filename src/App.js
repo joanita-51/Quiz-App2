@@ -13,25 +13,7 @@ function App() {
  
   return (
     <BrowserRouter>
-      <div>
-        {/* {isLoggedIn?(
-          <Routes>
-            <Route path='/sidebar' element={<Sidebar/>}/>
-            <Route path='/Dashboard' element={<Dashboard/>}/>
-            <Route path='/Results' element={<Results/>}/>
-            <Route path='/Notifications' element={<Notifications/>}/>
-            <Route path='/Profile' element={<Profile/>}/>
-            <Route path='/Logout' element={<Logout/>}/>
-          </Routes>
-
-        ):(
-          <Routes>
-            <Route path='/' element={<Landing/>}/>
-            <Route path='/signup' element={<SignUp/>}/>
-            <Route path='/login' element={<Login/>}/>
-          </Routes>
-
-        )} */}
+      <div className='flex'>
    
         <Routes>
           <Route element={<SidebarLayout/>}>
@@ -41,6 +23,7 @@ function App() {
             <Route path='/Notifications' element={<Notifications/>}/>
             <Route path='/Profile' element={<Profile/>}/>
             <Route path='/Logout' element={<Logout/>}/>
+            <Route path = '/Navbar' element = {<Navbar/>}/>
           </Route>
 
           <Route path='/' element={<Landing/>}/>

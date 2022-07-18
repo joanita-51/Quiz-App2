@@ -1,8 +1,10 @@
 import React from 'react'
 
-const Button = () => {
+const Button = ({bg , text}) => {
   return (
-    <div>Button</div>
+    <div>
+      <button className='text-blue-400 `${bg}`'> {text}</button>
+    </div>
   )
 }
 

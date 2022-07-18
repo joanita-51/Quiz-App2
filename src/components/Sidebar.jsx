@@ -11,10 +11,10 @@ const Sidebar = () => {
   const activeLink = 'text-white font-bold flex items-center gap-5 pl-4 pt-3 pb-3 text-2xl rounded-lg bg-violet-700';
   const normalLink = 'text-slate-200 flex items-center gap-5 pl-4 pt-3 pb-3 text-2xl hover:bg-violet-700 rounded-lg'
   return (
-    <div className='grid grid-cols-3'>
-      <div>
+    <div>
+        
         {activeMenu ? (
-          <div className='h-screen overflow-auto pb-10 bg-blue-700'>
+          <div className='h-screen overflow-auto pb-10 bg-blue-900'>
       
             <div className='flex items-center justify-between mt-5 ml-4'>
               <Link to='/dashboard' onClick={()=>{}}>
@@ -54,10 +54,9 @@ const Sidebar = () => {
         ):(
           <div className='w-0'></div>
         )}
-      </div>
-
-      <div className={`m-3 ${activeMenu? 'col-span-2' :'col-span-3' }`}><Navbar/></div>
     </div>
+     
+ 
   )
 }
 

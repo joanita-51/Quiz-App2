@@ -5,8 +5,8 @@ import Sidebar from './Sidebar'
 const SidebarLayout = () => {
   return (
     <>
-        <Sidebar/>
-        <Outlet/>
+      <Sidebar/>
+      <Outlet/>
     </>
   )
 }
