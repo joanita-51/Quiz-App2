@@ -159,3 +159,21 @@ export const studentResultsGrid = [
         width:'150'
     },
 ]
+
+export const notifications = [
+    {
+        content:'Quiz updated for course CN006 Computer Networks',
+
+    },
+    {
+        content:'Added a new course CN006 Computer Networks',
+
+    },
+    {
+        content:'General knowledge Quiz completed',
+      
+    },
+    {
+        content:'Profile Updated'
+    }
+]
