@@ -1,20 +1,31 @@
-import React from 'react'
+import React,{useState} from 'react'
 import { Navbar,Header } from '../components'
 import { notifications } from '../data/dummy'
 import { MdOutlineCancel } from 'react-icons/md'
 
 const Notifications = () => {
+
+  //state for the deletion of items
+  const [data, setdata] = useState(notifications)
+  const handleDelete = (index)=>{
+    setdata(current=>
+      current.filter((notification)=>(notification !== index )
+        
+      )
+    )
+    
+  }
   return (
     <div className='w-full'>
       <Navbar/>
       <div className='mt-9 ml-3 mr-5'>
-        <Header title='Notifications' size={(Object.keys(notifications)).length} />
+        <Header title='Notifications' size={data.length} />
         {
-          notifications.map((notification,index)=>(
-            <div className=' flex justify-between bg-white drop-shadow-sm rounded-md mb-2 py-7 pl-4'>
+          data.map((notification,index)=>(
+            <div key={index} className=' flex justify-between bg-white drop-shadow-sm rounded-md mb-2 py-7 pl-4'>
               {notification.content}
               <button type='button' 
-                onClick={()=>{}} 
+                onClick={()=>handleDelete(notification)} 
                 className='text-2xl block p-3 '
               >
                 <MdOutlineCancel/>
