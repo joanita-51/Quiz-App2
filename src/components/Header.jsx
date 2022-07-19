@@ -8,11 +8,11 @@ const Header = ({title , size}) => {
         {title} <span>({size})</span>
       </p>
       <div className='bg-white drop-shadow-sm rounded-lg mb-2'>
-        <button  className='flex  py-2 w-96  items-center p-3  justify-between'>
-          <p>Search</p>
+        <div  className='flex  py-2 w-96  items-center p-3  justify-between'>
+          <input  placeholder='Search'/>
             
-          <BiSearch />
-        </button>
+          <BiSearch className='cursor-pointer' />
+        </div>
         </div>
     </div>
   )

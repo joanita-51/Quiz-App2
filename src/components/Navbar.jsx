@@ -37,7 +37,7 @@ const Navbar = () => {
           <TooltipComponent content='userProfile' position='BottomCenter'>
             <div className='flex items-center gap-2 p-1 mr-5 cursor-pointer' onClick={()=>{}}>
               <img 
-                className='rounded-full h-7 w-7' src={profile} alt="" 
+                className='rounded-full h-7 w-7 object-cover' src={profile} alt="" 
               />
               <p>
                 <span>Joanita</span>

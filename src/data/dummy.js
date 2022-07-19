@@ -162,18 +162,18 @@ export const studentResultsGrid = [
 
 export const notifications = [
     {
-        content:'Quiz updated for course CN006 Computer Networks',
+        name:'Quiz updated for course CN006 Computer Networks',
 
     },
     {
-        content:'Added a new course CN006 Computer Networks',
+        name:'Added a new course CN006 Computer Networks',
 
     },
     {
-        content:'General knowledge Quiz completed',
+        name:'General knowledge Quiz completed',
       
     },
     {
-        content:'Profile Updated'
+        name:'Profile Updated'
     }
 ]
