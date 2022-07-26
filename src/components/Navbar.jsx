@@ -2,13 +2,12 @@ import React from 'react'
 import {TooltipComponent } from '@syncfusion/ej2-react-popups'
 import {FiMenu} from 'react-icons/fi'
 import {AiOutlineBell} from 'react-icons/ai'
-import {IoMdArrowDropdown} from 'react-icons/io'
 import profile from '../data/profile.jpg'
 import flag from '../data/Quiz App/flag/UM.png'
 import { useStateContext } from './contexts/ContextProvider'
 
 const Navbar = () => {
-  const {activeMenu, setActiveMenu} = useStateContext()
+  const {setActiveMenu} = useStateContext()
   return (
     <div className=' w-full h-24 sticky top-0 navbar bg-white drop-shadow-sm'>
 
@@ -23,7 +22,11 @@ const Navbar = () => {
   
         <div className='flex items-center'>
           <TooltipComponent content='English language' position= 'BottomCenter'>
-            <img  className='h-5 mr-5' src={flag}alt="English"/>
+            <div className='flex items-center p-1 mr-5 cursor-pointer'>
+              <img  className='h-5 mr-1' src={flag}alt="English"/>
+              <span>English </span> 
+            </div>
+
           </TooltipComponent>
        
           <TooltipComponent content='notifications' position='BottomCenter'>
@@ -40,10 +43,10 @@ const Navbar = () => {
                 className='rounded-full h-7 w-7 object-cover' src={profile} alt="" 
               />
               <p>
+                
                 <span>Joanita</span>
               </p>
 
-              <IoMdArrowDropdown/>
             </div>
           
           </TooltipComponent>

@@ -1,29 +1,48 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import { Navbar } from '../components'
-import {BiSearch} from 'react-icons/bi'
 import {GrFormAdd} from 'react-icons/gr'
 import {RiDeleteBinFill} from 'react-icons/ri'
 import {BsFillBookFill} from 'react-icons/bs'
 import { courses } from '../data/dummy'
+import Search from '../components/Search'
+
+const filterCourses = (searchValue) =>{
+  if(searchValue === ""){
+    return courses;
+  }
+  return courses.filter((course)=>
+    course.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+    course.code.toLowerCase().includes(searchValue.toLowerCase()) ||
+    course.update.toLowerCase().includes(searchValue.toLowerCase()) 
+  )
+}
 
 const Dashboard = () => {
   const [data, setData] = useState(courses)
+
+  //For unenrolling a particular course
   const handleDelete = (code)=>{
       setData(data.filter((course)=> course.code !== code))
   }
+
+  //For searching
+  const [searchValue, setSearchValue] = useState('')
+
+  useEffect(() => {
+    const filteredCourses = filterCourses(searchValue)
+    setData(filteredCourses)
+  }, [searchValue])
+
+  //Adding a particular course
+  
+  
   return (
     
     <div className='w-full'>
       <Navbar/>
       <div className='flex justify-between items-center mt-11 ml-3 mr-3 '>
-        <h2 className='text-xl'>All Courses Enrolled </h2>
-        <div className='bg-white drop-shadow-sm rounded-lg'>
-          <button  className='flex  py-2 w-96  items-center p-3  justify-between'>
-            <p>Search</p>
-            
-            <BiSearch />
-          </button>
-        </div>
+        <h2 className='text-xl'>All Courses Enrolled ({data.length}) </h2>
+        <Search callback={(searchValue)=>setSearchValue(searchValue)} />
 
         <div className='mr-5 bg-blue-900 rounded-3xl drop-shadow-lg'>
           <button  className='flex items-center  text-white py-2 w-44 px-2'>
