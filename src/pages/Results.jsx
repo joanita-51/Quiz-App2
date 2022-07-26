@@ -15,6 +15,7 @@ const filterResults = (searchValue) =>{
 }
 const Results = () => {
   const [data, setdata] = useState(studentResults)
+  const [course, setCourse] = useState(false)
 
   //for searching
   const [searchValue, setSearchValue]= useState('')

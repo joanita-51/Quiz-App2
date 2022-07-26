@@ -11,7 +11,7 @@ const filterCourses = (searchValue) =>{
     return courses;
   }
   return courses.filter((course)=>
-    course.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+    course.coursename.toLowerCase().includes(searchValue.toLowerCase()) ||
     course.code.toLowerCase().includes(searchValue.toLowerCase()) ||
     course.update.toLowerCase().includes(searchValue.toLowerCase()) 
   )
@@ -19,6 +19,7 @@ const filterCourses = (searchValue) =>{
 
 const Dashboard = () => {
   const [data, setData] = useState(courses)
+  const [addCourse, setaddCourse] = useState(false);
 
   //For unenrolling a particular course
   const handleDelete = (index)=>{
@@ -36,20 +37,18 @@ const Dashboard = () => {
   }, [searchValue])
 
   //Adding a particular course
-  const [name, setName] = useState('')
-  const handleChange = (e) =>{
-    //track input field's state
-    setName(e.target.value)
-  }
-
-  const handleAdd =()=>{
+  const [inputs, setInputs] = useState({})
+ 
+  const handleSubmit =(e)=>{
+    e.preventDefault();
     //add item
-    const newCourse = data.concat({name});
+    const newCourse = data.concat(inputs);
     setData(newCourse)
-
-    setName('')
+    console.log(inputs)
+    setaddCourse(false)
+    
   }
-  
+
   return (
     
     <div className='w-full'>
@@ -58,23 +57,53 @@ const Dashboard = () => {
         <h2 className='text-xl'>All Courses Enrolled ({data.length}) </h2>
         <Search callback={(searchValue)=>setSearchValue(searchValue)} />
 
-        <div className='mr-5 bg-blue-900 rounded-3xl drop-shadow-lg'>
-          <button  className='flex items-center  text-white py-2 w-44 px-2'>
+        <div className='mr-5 bg-blue-900 rounded-3xl drop-shadow-lg' >
+          <button  className='flex items-center  text-white py-2 w-44 px-2' onClick={()=>{setaddCourse((prev)=>!prev)}} >
            <GrFormAdd className='bg-white rounded-full ml-1'/>
           <p className='pl-2'> Add New Course</p>
           </button>
         </div>
        
       </div>
-      <input type="text" onChange={handleChange}/>
-          <button type='button' onClick={handleAdd}>
-            Add
-          </button>
+      {
+        addCourse?(
+        <div className='m-5'>
+          <form onSubmit={handleSubmit} >
+            <label>Course Name:
+              <input 
+                type="text" 
+                name='coursename' 
+                className='mr-5 ml-2'
+               onChange={(event)=>{setInputs({...inputs, coursename:event.target.value})}}
+              />
+            </label> 
+            
+            <label>Course Code:
+              <input
+               type="text" 
+               name='code' 
+               className='mr-5 ml-2'
+               onChange={(event)=>{setInputs({...inputs, code:event.target.value})}}
+              />
+            </label>
+            
+            <button type='submit' className='bg-blue-900 text-white rounded-md px-3 py-1' >
+              Add
+            </button>
+          </form>
+        </div>
+        ):(
+        <div>
+
+        </div>)
+      }
+
+
 
       <div className="grid grid-cols-2 gap-7 ml-3 mt-11 mr-6">
-        {data.map((course, index)=>(
+        {data.map((course,index)=>(
           <div key={index} className='bg-white p-3 drop-shadow-sm rounded-lg'>
-            <p className='mb-3 '>Course Name : <span className='ml-3'>{course.name}</span> </p>
+            <p className='mb-3 '>Course Name : <span className='ml-3'>{course.coursename}</span> </p>
             <p className='mb-3'>Course Code  : <span className='ml-3'>{course.code}</span> </p>
             <p className='mb-3'>Updated On : <span className='ml-5'>{course.update}</span> </p>
             <div className='flex gap-3 mt-2 justify-between mr-6'>

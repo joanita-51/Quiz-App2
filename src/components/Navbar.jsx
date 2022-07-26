@@ -5,6 +5,7 @@ import {AiOutlineBell} from 'react-icons/ai'
 import profile from '../data/profile.jpg'
 import flag from '../data/Quiz App/flag/UM.png'
 import { useStateContext } from './contexts/ContextProvider'
+import { Link } from 'react-router-dom'
 
 const Navbar = () => {
   const {setActiveMenu} = useStateContext()
@@ -30,24 +31,31 @@ const Navbar = () => {
           </TooltipComponent>
        
           <TooltipComponent content='notifications' position='BottomCenter'>
-            <button type='button' onClick={()=>{}} className=' text-sky-400 text-3xl relative mr-3 pt-1'>
+            <Link to='/Notifications'>
+              <button type='button' onClick={()=>{}} className=' text-sky-400 text-3xl relative mr-3 pt-1'>
 
-              <span className='absolute flex rounded-full h-3 w-3 inset-x-0.5 bg-sky-400'> </span>
-              <AiOutlineBell/>
-    
-            </button>
+                <span className='absolute flex rounded-full h-3 w-3 inset-x-0.5 bg-sky-400'> </span>
+                <AiOutlineBell/>
+
+              </button>
+            </Link>
+
           </TooltipComponent>
-          <TooltipComponent content='userProfile' position='BottomCenter'>
-            <div className='flex items-center gap-2 p-1 mr-5 cursor-pointer' onClick={()=>{}}>
-              <img 
-                className='rounded-full h-7 w-7 object-cover' src={profile} alt="" 
-              />
-              <p>
-                
-                <span>Joanita</span>
-              </p>
 
-            </div>
+          <TooltipComponent content='userProfile' position='BottomCenter'>
+            <Link to='/Profile'>
+              <div className='flex items-center gap-2 p-1 mr-5 cursor-pointer' onClick={()=>{}}>
+                <img 
+                  className='rounded-full h-7 w-7 object-cover' src={profile} alt="" 
+                />
+                <p>
+                  
+                  <span>Joanita</span>
+                </p>
+
+              </div>
+            </Link>
+
           
           </TooltipComponent>
         </div>

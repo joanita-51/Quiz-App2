@@ -31,25 +31,25 @@ export const links = [
 
 export const courses =[
     {
-        name: 'Software Architecture',
+        coursename: 'Software Architecture',
         code: 'SA001',
         update:'21 Feb,2022'
         
     },
     {
-        name: 'Operating Systems',
+        coursename: 'Operating Systems',
         code: 'OS002',
         update:'30 June,2022'
         
     },
     {
-        name: 'Requirements Engineering',
+        coursename: 'Requirements Engineering',
         code: 'RE004',
         update:'5 Apr,2022'
         
     },
     {
-        name: 'Object Oriented Programming',
+        coursename: 'Object Oriented Programming',
         code: 'OP003',
         update:'14 Mar,2022'
         
