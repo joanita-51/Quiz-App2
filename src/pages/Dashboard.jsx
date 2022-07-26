@@ -21,8 +21,10 @@ const Dashboard = () => {
   const [data, setData] = useState(courses)
 
   //For unenrolling a particular course
-  const handleDelete = (code)=>{
-      setData(data.filter((course)=> course.code !== code))
+  const handleDelete = (index)=>{
+      setData(current =>
+        current.filter((course)=>(course !== index))
+      )
   }
 
   //For searching
@@ -34,7 +36,19 @@ const Dashboard = () => {
   }, [searchValue])
 
   //Adding a particular course
-  
+  const [name, setName] = useState('')
+  const handleChange = (e) =>{
+    //track input field's state
+    setName(e.target.value)
+  }
+
+  const handleAdd =()=>{
+    //add item
+    const newCourse = data.concat({name});
+    setData(newCourse)
+
+    setName('')
+  }
   
   return (
     
@@ -52,10 +66,14 @@ const Dashboard = () => {
         </div>
        
       </div>
+      <input type="text" onChange={handleChange}/>
+          <button type='button' onClick={handleAdd}>
+            Add
+          </button>
 
       <div className="grid grid-cols-2 gap-7 ml-3 mt-11 mr-6">
-        {data.map((course)=>(
-          <div className='bg-white p-3 drop-shadow-sm rounded-lg'>
+        {data.map((course, index)=>(
+          <div key={index} className='bg-white p-3 drop-shadow-sm rounded-lg'>
             <p className='mb-3 '>Course Name : <span className='ml-3'>{course.name}</span> </p>
             <p className='mb-3'>Course Code  : <span className='ml-3'>{course.code}</span> </p>
             <p className='mb-3'>Updated On : <span className='ml-5'>{course.update}</span> </p>
