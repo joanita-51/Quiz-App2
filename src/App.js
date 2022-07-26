@@ -6,6 +6,7 @@ import {Dashboard, Landing, Login, Logout, Notifications, Profile, Results, Sign
 import './App.css'
 
 import {useStateContext} from './components/contexts/ContextProvider';
+import View from './pages/View';
 
 function App() {
   const {activeMenu} = useStateContext()
@@ -24,11 +25,13 @@ function App() {
             <Route path='/Profile' element={<Profile/>}/>
             <Route path='/Logout' element={<Logout/>}/>
             <Route path = '/Navbar' element = {<Navbar/>}/>
+            <Route path='/view' element={<View/>}/>
           </Route>
 
           <Route path='/' element={<Landing/>}/>
           <Route path='/signup' element={<SignUp/>}/>
           <Route path='/login' element={<Login/>}/>
+         
         
         </Routes>
       </div>

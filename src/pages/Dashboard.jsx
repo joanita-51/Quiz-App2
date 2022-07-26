@@ -5,6 +5,7 @@ import {RiDeleteBinFill} from 'react-icons/ri'
 import {BsFillBookFill} from 'react-icons/bs'
 import { courses } from '../data/dummy'
 import Search from '../components/Search'
+import { Link } from 'react-router-dom'
 
 const filterCourses = (searchValue) =>{
   if(searchValue === ""){
@@ -107,12 +108,18 @@ const Dashboard = () => {
             <p className='mb-3'>Course Code  : <span className='ml-3'>{course.code}</span> </p>
             <p className='mb-3'>Updated On : <span className='ml-5'>{course.update}</span> </p>
             <div className='flex gap-3 mt-2 justify-between mr-6'>
-              <div className='bg-blue-900 rounded-md drop-shadow-lg'>
-                <button  className='flex items-center  text-white py-2 px-5'>
-                  <BsFillBookFill/>
-                  <p className='pl-2'>View</p>
-                </button>
+              <Link to='/view'>
+                <div className='bg-blue-900 rounded-md drop-shadow-lg'>
+                  <button  
+                  className='flex items-center  text-white py-2 px-5'
+                  
+                  >
+                    <BsFillBookFill/>
+                    <p className='pl-2'>View</p>
+                  </button>
               </div>
+              </Link>
+ 
                 <div className='bg-red-600 rounded-md drop-shadow-lg'>
                   <button  
                     className='flex items-center  text-white py-2 px-3'
