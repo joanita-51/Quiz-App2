@@ -7,6 +7,7 @@ import './App.css'
 
 import {useStateContext} from './components/contexts/ContextProvider';
 import View from './pages/View';
+import Quiz from './pages/Quiz';
 
 function App() {
   const {activeMenu} = useStateContext()
@@ -31,6 +32,7 @@ function App() {
           <Route path='/' element={<Landing/>}/>
           <Route path='/signup' element={<SignUp/>}/>
           <Route path='/login' element={<Login/>}/>
+          <Route path='/quiz' element={<Quiz/>}/>
          
         
         </Routes>

@@ -9,7 +9,7 @@
 @import "../node_modules/@syncfusion/ej2-react-grids/styles/material.css";
  
 body{
-    background-color: rgb(241 245 249);
+    background-color: rgb(203 213 225);
 }
 .navbar {
     z-index: 10000;

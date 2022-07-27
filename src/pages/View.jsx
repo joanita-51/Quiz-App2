@@ -12,13 +12,16 @@ const View = () => {
                 <p className='mb-3'>Topic: <span className='ml-3'>General Knowledge</span> </p>
                 <p className='mb-3'>Due: <span className='ml-5 '>10 Oct, 2022</span> </p>
                 <p className='mb-3'>Status: <span className='ml-3'>Not attempted</span></p>
-                <button className='bg-lime-600 text-white rounded-md p-1 '>Take quiz</button>
+                <Link to='/quiz'>
+                    <button className='bg-lime-600 text-white rounded-md p-1 '>Take quiz</button>
+                </Link>
+
             </div>
             <div className='bg-white rounded-lg drop-shadow-md m-5 p-5'>
                 <p className='mb-3'>Topic: <span className='ml-3'>General Knowledge</span> </p>
                 <p className='mb-3'>Due: <span className='ml-5 '>10 Oct, 2022</span> </p>
-                <p className='mb-3'>Status: <span className='ml-3'>Not attempted</span></p>
-                <button className='bg-lime-600 text-white rounded-md p-1'>Take quiz</button>
+                <p className='mb-3'>Status: <span className='ml-3'>Attempted</span></p>
+                <button className='bg-lime-600 text-white rounded-md p-1 disabled:opacity-75'>Take quiz</button>
             </div>
         </div>
         <h1 className='mt-5 flex justify-center'>Your Course Results </h1>
