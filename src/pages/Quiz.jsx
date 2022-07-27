@@ -1,10 +1,15 @@
 import React,{useState} from 'react'
 import logo from '../data/logo.png'
-
+import { questions } from '../data/dummy'
 
 const Quiz = () => {
     //show the final results
     const [showResults, setShowResults] = useState(false)
+    //Questions state
+    const [currentQuestion, setCurrentQuestion] =useState(0)
+    //Score state
+    const [score, setScore] = useState(0)
+
   return (
     <div className=' m-auto w-7/12'>
         <img src={logo} alt='logo' className='w-64 block ml-auto mr-auto  mt-9'/>
@@ -14,7 +19,7 @@ const Quiz = () => {
             <hr />
 
             {/* Current Score */}
-            <h2 className='font-bold'>Score: 3</h2>
+            <h2 className='font-bold'>Score:{score}</h2>
 
             {/* Question Card */}
 
@@ -31,14 +36,23 @@ const Quiz = () => {
                     ):(
                         <form >
                         <div className='mb-5'>
-                            <h2 className='font-bold'>Question: 1 </h2>
-                            <p>Which of the following is a programming language</p>
-                            <input type="radio" id="html" name='language' value="HTML"/>
-                            <label htmlFor="html">HTML</label> <br />
-                            <input type="radio" id="css" name='language' value="CSS"/>
-                            <label htmlFor="css">CSS</label> <br />
-                            <input type="radio" id="js" name='language' value="JS"/>
-                            <label htmlFor="js">JS</label> <br/>  
+                            {/* Question */}
+                            <h2 className='font-bold'>Question:{currentQuestion+1 }</h2>
+                            {/* Answers */}
+
+                            {
+                                questions.map((question)=>(
+                                    
+                                    <form >
+                                    <p>{question.text}</p>
+                                    <input type="radio" id={question.options.map((option)=>(option.text))} name={question.name} />
+                                    <label >{question.options.map((option)=>(option.text))}</label> <br />
+                                    </form>
+                                ))
+                            }
+
+                           
+                            
                         </div>
                     
                         <div className='mb-5'>

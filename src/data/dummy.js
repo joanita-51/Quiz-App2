@@ -177,3 +177,59 @@ export const notifications = [
         name:'Profile Updated'
     }
 ]
+export const questions = [ 
+    {
+      text: 'Which of the following is a programming language?',
+      name:'language',
+      
+      options: [ 
+        { text: 'HTML', isCorrect: false},
+        { text: 'CSS', isCorrect: false},
+        { text: 'MangoDB', isCorrect: false},
+        { text: 'JS', isCorrect: true},
+      
+      ]
+    },
+    {
+      text: 'What pharse belongs to the SDLC ?',
+      name:'sdlc',
+      options: [ 
+        { text: 'planning', isCorrect: true},
+        { text: 'travelling', isCorrect: false},
+        { text: 'studying', isCorrect: false},
+        { text: 'learning', isCorrect: false},
+       
+      ]
+    },
+    {
+      text: "Which of the following includes Chrome's V8 JavaScript Engine",
+      name:'chrome',
+      options: [ 
+        { text: 'jQuery', isCorrect: false},
+        { text: 'Java', isCorrect: false},
+        { text: 'npm', isCorrect: false},
+        { text: 'Node.js', isCorrect: true},
+ 
+      ]
+    },
+    {
+      text: 'What does a compiler do?',
+      name: 'compiler',
+      options: [ 
+        { text: 'Translates computer code from machine level to byte code', isCorrect: false},
+        { text: 'Translates computer code from higher-level programming language to machine code', isCorrect: true},
+        { text: 'Translates computer code from lower-level programming language to higher-level programming language', isCorrect: false},
+        { text: 'A compiler does nothing', isCorrect: false},
+        ]
+    },
+    {
+      text: 'Bootstrap is a CSS framework',
+      name:'framework',
+      options: [ 
+        { text: 'True', isCorrect: true},
+        { text: 'False', isCorrect: false},
+  
+
+      ]
+    }
+  ]
