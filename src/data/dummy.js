@@ -134,28 +134,28 @@ export const studentResults =[
 export const studentResultsGrid = [
     {
         field:'CourseName',
-        headerText:'Course Name',
-        textAlign:'Left',
+        headeranswer:'Course Name',
+        answerAlign:'Left',
         width:'150',
         isPrimaryKey:true,
     },
     {
         field:'AttemptedDate',
-        headerText:'Attempted Date',
-        textAlign:'Left',
+        headeranswer:'Attempted Date',
+        answerAlign:'Left',
         width:'150',
         format:'yMd'
     },
     {
         field:'ScoreEarned',
-        headerText:'Score Earned',
-        textAlign:'Left',
+        headeranswer:'Score Earned',
+        answerAlign:'Left',
         width:'150'
     },
     {
         field:'QuestionsAttempted',
-        headerText:'Questions Attempted',
-        textAlign:'Left',
+        headeranswer:'Questions Attempted',
+        answerAlign:'Left',
         width:'150'
     },
 ]
@@ -179,55 +179,60 @@ export const notifications = [
 ]
 export const questions = [ 
     {
-      text: 'Which of the following is a programming language?',
-      name:'language',
+      question: 'Which of the following is a programming language?',
+      fieldname:'language',
+      fieldtype: 'radio',
       
       options: [ 
-        { text: 'HTML', isCorrect: false},
-        { text: 'CSS', isCorrect: false},
-        { text: 'MangoDB', isCorrect: false},
-        { text: 'JS', isCorrect: true},
+        { answer: 'HTML', isCorrect: false},
+        { answer: 'CSS', isCorrect: false},
+        { answer: 'MangoDB', isCorrect: false},
+        { answer: 'JS', isCorrect: true},
       
       ]
     },
     {
-      text: 'What pharse belongs to the SDLC ?',
-      name:'sdlc',
+      question: 'What pharse belongs to the SDLC ?',
+      fieldname:'sdlc',
+      fieldtype: 'radio',
       options: [ 
-        { text: 'planning', isCorrect: true},
-        { text: 'travelling', isCorrect: false},
-        { text: 'studying', isCorrect: false},
-        { text: 'learning', isCorrect: false},
+        { answer: 'Planning', isCorrect: true},
+        { answer: 'Travelling', isCorrect: false},
+        { answer: 'Studying', isCorrect: false},
+        { answer: 'Learning', isCorrect: false},
        
       ]
     },
     {
-      text: "Which of the following includes Chrome's V8 JavaScript Engine",
-      name:'chrome',
+      question: "Which of the following includes Chrome's V8 JavaScript Engine",
+      fieldname:'chrome',
+      fieldtype: 'radio',
       options: [ 
-        { text: 'jQuery', isCorrect: false},
-        { text: 'Java', isCorrect: false},
-        { text: 'npm', isCorrect: false},
-        { text: 'Node.js', isCorrect: true},
+        { answer: 'JQuery', isCorrect: false},
+        { answer: 'Java', isCorrect: false},
+        { answer: 'NPM', isCorrect: false},
+        { answer: 'Node.js', isCorrect: true},
  
       ]
     },
     {
-      text: 'What does a compiler do?',
-      name: 'compiler',
+      question: 'What does a compiler do?',
+      fieldname: 'compiler',
+      fieldtype: 'radio',
       options: [ 
-        { text: 'Translates computer code from machine level to byte code', isCorrect: false},
-        { text: 'Translates computer code from higher-level programming language to machine code', isCorrect: true},
-        { text: 'Translates computer code from lower-level programming language to higher-level programming language', isCorrect: false},
-        { text: 'A compiler does nothing', isCorrect: false},
+        { answer: 'Translates computer code from machine level to byte code', isCorrect: false},
+        { answer: 'Translates computer code from higher-level programming language to machine code', isCorrect: true},
+        { answer: 'Translates computer code from lower-level programming language to higher-level programming language', isCorrect: false},
+        { answer: 'A compiler does nothing', isCorrect: false},
         ]
     },
     {
-      text: 'Bootstrap is a CSS framework',
-      name:'framework',
+      question: 'Bootstrap is a CSS framework',
+      fieldname:'framework',
+      fieldtype: 'radio',
       options: [ 
-        { text: 'True', isCorrect: true},
-        { text: 'False', isCorrect: false},
+        { answer: 'True', isCorrect: true},
+        { answer: 'False', isCorrect: false},
   
 
       ]
