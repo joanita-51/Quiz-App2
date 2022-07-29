@@ -1,23 +1,23 @@
-import React,{useState, useEffect} from 'react'
+import React,{useState} from 'react'
 import logo from '../data/logo.png'
 import { questions } from '../data/dummy'
-
+import { Link } from 'react-router-dom'
+import {IoIosArrowBack} from 'react-icons/io'
 const Quiz = () => {
     //show the final results
     const [showResults, setShowResults] = useState(false)
-    //Questions state
-    const [currentQuestion, setCurrentQuestion] =useState(0)
     //Score state
     const [score, setScore] = useState(0)
-
-    if(currentQuestion<0.5){
-        setCurrentQuestion((prev)=>prev+1) 
-    }
 
     const optionClicked = (isCorrect) =>{
         if(isCorrect){
             setScore(score +1)
         }
+    }
+
+    const tryAgain = ()=>{
+        setScore(0)
+        setShowResults(false)
     }
 
   return (
@@ -27,9 +27,6 @@ const Quiz = () => {
             {/* Header */}
             <h1 className='flex justify-center text-3xl m-3 font-bold'>General Knowledge Quiz</h1>
             <hr />
-
-            {/* Current Score */}
-            <h2 className='font-bold'>Score:{score}</h2>
 
             {/* Question Card */}
 
@@ -41,20 +38,20 @@ const Quiz = () => {
                         <div className='font-bold'>
                             <h1 className='flex justify-center mb-3'>Final Results</h1>
                             <h2 className='flex justify-center mb-3'>{score} out of {questions.length} correct - ({(score / questions.length)*100}%)</h2>
-                            <button className='bg-lime-600 text-white rounded-md p-2 mx-auto block'>Try again</button>
+                            <button 
+                                className='bg-lime-600 text-white rounded-md p-2 mx-auto block'
+                                onClick={()=>tryAgain()}
+                            >
+                                Try again
+                            </button>
                         </div>
                     ):(
-                        <form >
-                        <div className='mb-5'>
-                            {/* Question */}
-                            
-                            {/* Answers */}
-
-                            {
-                                questions.map((question,index)=>(
+                    <div className='mb-5'>
+                       {
+                            questions.map((question,index)=>(
                                     
-                                    <form key={index} >
-                                    <h2 className='font-bold'>Question:{index+1}</h2>
+                                <form key={index} >
+                                    <h2 className='font-bold mt-4'>Question:{index+1}</h2>
                                     <p>{question.question}</p>
                                     {question.options.map((option)=>(
                                         <>
@@ -67,32 +64,38 @@ const Quiz = () => {
                                         </>
 
                                     ))}
-                                    </form>
+                                </form>
                                 ))
-                            }
-
-                           
-                            
-                        </div>
-                    
-                        <div className='mb-5'>
-                            <h2 className='font-bold'>Question: 2 </h2>
-                            <p>Please select your age:</p>
-                            <input type="radio" id="age1" name="age" value="30"/>
-                            <label for="age1">0 - 30</label><br/>
-                            <input type="radio" id="age2" name="age" value="60"/>
-                            <label for="age2">31 - 60</label><br/>  
-                            <input type="radio" id="age3" name="age" value="100"/>
-                            <label for="age3">61 - 100</label> 
-                            
+                        }
+                        <div className='flex justify-between mt-6'>
+                            <Link to='/Dashboard'>
                             <button 
-                            className='block ml-auto bg-lime-600 text-white rounded-md p-2 '
-                            onClick={()=>setShowResults(true)}
+                                className='bg-lime-600 text-white rounded-md p-2 '
+                            
                             >
-                                Submit
-                            </button>
+                                <div className='flex leading-tight'>
+                                <IoIosArrowBack />
+                                <IoIosArrowBack/>
+                                    Back    
+                                </div>
+
+                            </button> 
+                            </Link>
+                            <button 
+                                className='bg-lime-600 text-white rounded-md p-2 leading-tight'
+                                onClick={()=>setShowResults((prev)=> !prev)}
+                            >
+                                submit
+                            </button>   
                         </div>
-                    </form>
+
+
+
+                            
+                    </div>
+                    
+
+
                     )
                 }
 
