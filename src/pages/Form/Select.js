@@ -12,9 +12,11 @@ props: control- determines the type of the form control we need to render
 const Select = (props) => {
     const {name, label,options , ...rest} = props;
   return (
-    <div className='form-control'>
+    <div className='ml-12 mt-5'>
         <label htmlFor={name}>{label}</label>
-        <Field as='select' id={name} name={name} {...rest}>
+        <Field as='select' id={name} name={name} {...rest}
+        className='ml-5'
+        >
             //these children are the list of options
             {
                 options.map(option => {

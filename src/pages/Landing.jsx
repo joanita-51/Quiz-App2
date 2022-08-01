@@ -31,7 +31,7 @@ const Landing = () => {
           Quizote is an online quizz web application for both teachers and students.<br />
           For students, find quiz friendly questions to test your mind and teachers, find out the area that needs more focus <br />
 
-          <Link to = '/login'>
+          <Link to = '/quiz'>
           <button className="outline outline-offset-1 outline-1 p-2 shadow-lg rounded-sm focus:-translate-y-1 bg-blue-700 hover:bg-blue-600 mt-16 mb-28 ">Get Started</button>
           </Link>
           

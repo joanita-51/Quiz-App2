@@ -21,7 +21,7 @@ const View = () => {
                 <p className='mb-3'>Topic: <span className='ml-3'>General Knowledge</span> </p>
                 <p className='mb-3'>Due: <span className='ml-5 '>10 Oct, 2022</span> </p>
                 <p className='mb-3'>Status: <span className='ml-3'>Attempted</span></p>
-                <button className='bg-lime-600 text-white rounded-md p-1 disabled:opacity-75'>Take quiz</button>
+                <button className='bg-lime-600 text-white rounded-md p-1 opacity-50'>Take quiz</button>
             </div>
         </div>
         <h1 className='mt-5 flex justify-center'>Your Course Results </h1>
