@@ -21,25 +21,20 @@ const Login = () => {
   }
  
   return (
-    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit} >
+    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}  >
       {
         formik => (
         
-            <Form >
+            <Form className="text-white h-screen">
               <FormikControl
                 control='input'
-                type='email'
-                label='Email'
-                name='email'
+                type='telephone'
+                label='Phone Number'
+                name='phone'
               />
-              <FormikControl
-                control='input'
-                type='password'
-                label='Password'
-                name='password'
-              />
-            <Link to='/Dashboard'>
-            <button type='submit' disabled={!formik.isValid} className='rounded-full border-2 mx-11 my-3 mt-6 px-11 py-2 border-indigo-600 text-white bg-indigo-900 hover:bg-indigo-400'>Submit</button>
+
+            <Link to='/Quiz'>
+            <button  className='rounded-full border-2 mx-11 my-3 mt-6 px-11 py-2 border-indigo-600 text-white bg-indigo-900 hover:bg-indigo-400'>Submit</button>
             </Link>
               
             </Form>

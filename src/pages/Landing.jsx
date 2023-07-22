@@ -1,43 +1,61 @@
 import React from 'react'
-import hero from '../data/background1.jpg'
-import logo from '../data/logo.png'
+import hero from '../data/hero.png'
+import logo from '../data/icon.png'
 import { Link } from 'react-router-dom'
 
 const Landing = () => {
   return (
-    <div className=" bg-gradient-to-r from-violet-500 to-fuchsia-500">
-      <nav className="relative px-2 py-3  bg-blue-700 mb-0">
-        <div className="container px-4 mx-auto flex items-center justify-between text-white font-semibold text-2xl">
-          <img src={logo} alt='logo' className='w-64'/>
-          <div>
-            
+    <div className=" bg-[#10316B] w-full h-screen">
+      <nav className="px-10 py-10 ">
+        <div className="container px-4 mx-auto flex items-center justify-between text-white">
+          {/* <img src={logo} alt='logo' className=''/> */}
+
+          <div className='font-bold text-[30px]'>
+            <p><span>QuiZ</span><span className='text-[#f57328]'>ote</span></p>
+          </div>
+
+            <div className='flex gap-16 '>
+              <p>ABOUT</p>
+              <p>FAQ</p>
+              <p>CONTACT</p>
+            </div>
+
             <span className="ml-2 ">
               <Link to='/login'>
-                <button className="outline outline-offset-2 outline-1 w-24 shadow-lg rounded-sm focus:-translate-y-1 hover:bg-blue-600 ">Log In</button>
+                <button className="w-24 p-2 shadow-lg rounded-lg focus:-translate-y-1 bg-[#3f8521] hover:bg-[#f57328]">Log In</button>
               </Link>
             </span>
-
-            <span className="ml-10">
+            
+            
+            {/* <span className="ml-10">
               <Link to='/signup'>
                 <button className="outline outline-offset-2 outline-1 w-24 shadow-lg rounded-sm focus:-translate-y-1 hover:bg-blue-600">Sign Up</button>
               </Link>  
-            </span>
+            </span> */}
 
-          </div>
+
         </div>
       </nav>
-      <div className="grid grid-cols-2 gap-4 pl-16 text-xl  text-white ">
-        <div className='mr-5 mt-20 '>
-          Quizote is an online quizz web application for both teachers and students.<br />
-          For students, find quiz friendly questions to test your mind and teachers, find out the area that needs more focus <br />
+      <div className="grid grid-cols-3 gap-4 pl-16 text-xl  text-white ">
+        <div className=''>
+          <div className='mt-20 mb-20 font-bold'>
+            <p className='text-[40px] pb-5'>Unlock <span className='text-[#f57328]'>Knowledge,</span></p> 
+            <p className='text-[50px] pt-5'>Empower <span className='text-[#4FA929]'>Minds</span></p>
+          </div>
+          <div ld>
+            <p className='leading-10'>Your ultimate app designed to ignite curiosity <span className='font-bold'>&</span> <br />
+             fuel the pursuit of knowledge.</p>
+          </div>
 
-          <Link to = '/quiz'>
-          <button className="outline outline-offset-1 outline-1 p-2 shadow-lg rounded-sm focus:-translate-y-1 bg-blue-700 hover:bg-blue-600 mt-16 mb-28 ">Get Started</button>
+          <Link to = '/quiz' >
+          <button className="w-32 p-2 shadow-lg rounded-lg focus:-translate-y-1 bg-[#3f8521] hover:bg-[#f57328] mt-5">Get Started</button>
           </Link>
           
         </div>
-        
-        <img src={hero} alt='logo' className='rounded-md shadow-xl mt-5 mb-5' />
+        <div className='col-span-2'>
+          <img src={hero} alt='logo' className='w-full' />
+        </div>
+
       </div>
 
       <div>

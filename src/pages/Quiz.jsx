@@ -20,9 +20,19 @@ const Quiz = () => {
         setShowResults(false)
     }
 
+    const reward =()=>{
+        if(score>=80){
+            console.log("passed")
+        }
+    }
+
   return (
     <div className=' m-auto w-7/12'>
-        <img src={logo} alt='logo' className='w-64 block ml-auto mr-auto  mt-9'/>
+        <div className='font-bold text-[30px] text-center mt-9'>
+            <p><span className='text-white'>QuiZ</span><span className='text-[#f57328]'>ote</span></p>
+          </div>
+
+        {/* <img src={logo} alt='logo' className='w-64 block ml-auto mr-auto  mt-9'/> */}
         <div className='bg-white mt-3 p-6 rounded-xl shadow-lg'>
             {/* Header */}
             <h1 className='flex justify-center text-3xl m-3 font-bold'>General Knowledge Quiz</h1>
@@ -36,6 +46,7 @@ const Quiz = () => {
                 {
                     showResults?(
                         <div className='font-bold'>
+                            {reward?(<p className='text-center text-green-600 font-bold mt-4'>Congratulations, you have earned airtime!</p>) :(<p>you can try again to win airtime</p>)}
                             <h1 className='flex justify-center mb-3'>Final Results</h1>
                             <h2 className='flex justify-center mb-3'>{score} out of {questions.length} correct - ({(score / questions.length)*100}%)</h2>
                             <button 
@@ -44,7 +55,9 @@ const Quiz = () => {
                             >
                                 Try again
                             </button>
+
                         </div>
+
                     ):(
                     <div className='mb-5'>
                        {
@@ -87,6 +100,7 @@ const Quiz = () => {
                             >
                                 submit
                             </button>   
+                          
                         </div>
 
 

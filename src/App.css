@@ -8,9 +8,9 @@
 @import '../node_modules/@syncfusion/ej2-splitbuttons/styles/material.css';
 @import "../node_modules/@syncfusion/ej2-react-grids/styles/material.css";
  
-body{
+/* body{
     background-color: rgb(203 213 225);
-}
+} */
 .navbar {
     z-index: 10000;
 }

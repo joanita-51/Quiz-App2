@@ -15,7 +15,7 @@ function App() {
  
   return (
     <BrowserRouter>
-      <div className='flex'>
+      <div className='flex bg-[#10316B]'>
    
         <Routes>
           <Route element={<SidebarLayout/>}>

@@ -43,9 +43,9 @@ const SignUp = () => {
     institutionID: Yup.string().when('institution',{is: true, then: Yup.string().required('Required')})
   })
 
-  const onSubmit = values => {
-    console.log('Form data', values)
-  }
+    const onSubmit = values => {
+      console.log('Form data', values)
+    }
 
   return (
     <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={onSubmit}>

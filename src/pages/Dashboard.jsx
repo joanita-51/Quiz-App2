@@ -52,7 +52,7 @@ const Dashboard = () => {
 
   return (
     
-    <div className='w-full'>
+    <div >
       <Navbar/>
       <div className='flex justify-between items-center mt-11 ml-3 mr-3 '>
         <h2 className='text-xl'>All Courses Enrolled ({data.length}) </h2>
