@@ -61,101 +61,101 @@ export const studentResults =[
         CourseName: 'CN006 Computer Networks',
         AttemptedDate: '9 June, 2022',
         ScoreEarned: '90/100',
-        QuestionsAttempted:'9/9'
+        promptsAttempted:'9/9'
     },
     {
         CourseName: 'CL007 Computer Literacy',
         AttemptedDate: '17 June, 2022',
         ScoreEarned: '100/100',
-        QuestionsAttempted:'10/10'
+        promptsAttempted:'10/10'
     },
     {
         CourseName: 'OS002 Operating systems',
         AttemptedDate: '29 June, 2022',
         ScoreEarned: '98/100',
-        QuestionsAttempted:'15/15'
+        promptsAttempted:'15/15'
     },
     {
         CourseName: 'SA001 Software Architecture',
         AttemptedDate: '1 Juy, 2022',
         ScoreEarned: '95/100',
-        QuestionsAttempted:'20/20'
+        promptsAttempted:'20/20'
     },
     {
         CourseName: 'OOP003 Object Oriented Programming',
         AttemptedDate: '4 July, 2022',
         ScoreEarned: '85/100',
-        QuestionsAttempted:'25/25'
+        promptsAttempted:'25/25'
     },
     {
         CourseName: 'Requirements Engineering',
         AttemptedDate: '10 July, 2022',
         ScoreEarned: '80/100',
-        QuestionsAttempted:'30/30'
+        promptsAttempted:'30/30'
     },
     {
         CourseName: 'CN006 Computer Networks',
         AttemptedDate: '9 June, 2022',
         ScoreEarned: '90/100',
-        QuestionsAttempted:'9/9'
+        promptsAttempted:'9/9'
     },
     {
         CourseName: 'CL007 Computer Literacy',
         AttemptedDate: '17 June, 2022',
         ScoreEarned: '100/100',
-        QuestionsAttempted:'10/10'
+        promptsAttempted:'10/10'
     },
     {
         CourseName: 'OS002 Operating systems',
         AttemptedDate: '29 June, 2022',
         ScoreEarned: '98/100',
-        QuestionsAttempted:'15/15'
+        promptsAttempted:'15/15'
     },
     {
         CourseName: 'SA001 Software Architecture',
         AttemptedDate: '1 Juy, 2022',
         ScoreEarned: '95/100',
-        QuestionsAttempted:'20/20'
+        promptsAttempted:'20/20'
     },
     {
         CourseName: 'OOP003 Object Oriented Programming',
         AttemptedDate: '4 July, 2022',
         ScoreEarned: '85/100',
-        QuestionsAttempted:'25/25'
+        promptsAttempted:'25/25'
     },
     {
         CourseName: 'Requirements Engineering',
         AttemptedDate: '10 July, 2022',
         ScoreEarned: '80/100',
-        QuestionsAttempted:'30/30'
+        promptsAttempted:'30/30'
     },
 ]
 
 export const studentResultsGrid = [
     {
         field:'CourseName',
-        headeranswer:'Course Name',
-        answerAlign:'Left',
+        headerid: "" , text:'Course Name',
+        id: "" , textAlign:'Left',
         width:'150',
         isPrimaryKey:true,
     },
     {
         field:'AttemptedDate',
-        headeranswer:'Attempted Date',
-        answerAlign:'Left',
+        headerid: "" , text:'Attempted Date',
+        id: "" , textAlign:'Left',
         width:'150',
         format:'yMd'
     },
     {
         field:'ScoreEarned',
-        headeranswer:'Score Earned',
-        answerAlign:'Left',
+        headerid: "" , text:'Score Earned',
+        id: "" , textAlign:'Left',
         width:'150'
     },
     {
-        field:'QuestionsAttempted',
-        headeranswer:'Questions Attempted',
-        answerAlign:'Left',
+        field:'promptsAttempted',
+        headerid: "" , text:'prompts Attempted',
+        id: "" , textAlign:'Left',
         width:'150'
     },
 ]
@@ -177,64 +177,3 @@ export const notifications = [
         name:'Profile Updated'
     }
 ]
-export const questions = [ 
-    {
-      question: 'Which of the following is a programming language?',
-      fieldname:'language',
-      fieldtype: 'radio',
-      
-      options: [ 
-        { answer: 'HTML', isCorrect: false},
-        { answer: 'CSS', isCorrect: false},
-        { answer: 'MangoDB', isCorrect: false},
-        { answer: 'JS', isCorrect: true},
-      
-      ]
-    },
-    {
-      question: 'What pharse belongs to the SDLC ?',
-      fieldname:'sdlc',
-      fieldtype: 'radio',
-      options: [ 
-        { answer: 'Planning', isCorrect: true},
-        { answer: 'Travelling', isCorrect: false},
-        { answer: 'Studying', isCorrect: false},
-        { answer: 'Learning', isCorrect: false},
-       
-      ]
-    },
-    {
-      question: "Which of the following includes Chrome's V8 JavaScript Engine",
-      fieldname:'chrome',
-      fieldtype: 'radio',
-      options: [ 
-        { answer: 'JQuery', isCorrect: false},
-        { answer: 'Java', isCorrect: false},
-        { answer: 'NPM', isCorrect: false},
-        { answer: 'Node.js', isCorrect: true},
- 
-      ]
-    },
-    {
-      question: 'What does a compiler do?',
-      fieldname: 'compiler',
-      fieldtype: 'radio',
-      options: [ 
-        { answer: 'Translates computer code from machine level to byte code', isCorrect: false},
-        { answer: 'Translates computer code from higher-level programming language to machine code', isCorrect: true},
-        { answer: 'Translates computer code from lower-level programming language to higher-level programming language', isCorrect: false},
-        { answer: 'A compiler does nothing', isCorrect: false},
-        ]
-    },
-    {
-      question: 'Bootstrap is a CSS framework',
-      fieldname:'framework',
-      fieldtype: 'radio',
-      options: [ 
-        { answer: 'True', isCorrect: true},
-        { answer: 'False', isCorrect: false},
-  
-
-      ]
-    }
-  ]
