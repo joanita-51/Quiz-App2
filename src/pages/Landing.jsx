@@ -31,12 +31,12 @@ const Landing = () => {
             </a>
           </div>
 
-          <Link
+          {/* <Link
             to="/login"
             className="rounded-lg border border-white/30 px-4 py-2 font-semibold transition hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-orange-300"
           >
             Log in
-          </Link>
+          </Link> */}
         </nav>
       </header>
 
