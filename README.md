@@ -1,70 +1,83 @@
-# Getting Started with Create React App
+# Quizote
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Quizote is a responsive learning application that helps beginner web developers test their web-development knowledge and learn how to review AI-generated code safely.
 
-## Available Scripts
+[View the live application](https://quizote.netlify.app/)
 
-In the project directory, you can run:
+## Features
 
-### `npm start`
+* Ten beginner-friendly questions
+* One-question-at-a-time navigation
+* Progress tracking
+* Unanswered-question validation
+* Automatic score calculation
+* Correct-answer explanations
+* Answer review and quiz retry
+* Responsive desktop and mobile layouts
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## How it works
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+1. Start the quiz from the landing page.
+2. Answer all ten questions.
+3. Navigate between questions without losing selected answers.
+4. Submit the completed quiz.
+5. Review your score, answers, and explanations.
+6. Retry the quiz to improve your result.
 
-### `npm test`
+## Planned AI feature
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Personalized AI explanations are not implemented yet.
 
-### `npm run build`
+A future version will allow students to request:
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+* A simpler explanation
+* A practical example
+* A similar practice question
+* Additional clarification about an incorrect answer
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+Quiz scoring will continue to be handled by the application rather than AI.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Built with
 
-### `npm run eject`
+* React
+* React Router
+* JavaScript
+* Tailwind CSS
+* Netlify
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Run locally
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Clone the repository:
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+```bash
+git clone https://github.com/joanita-51/Quiz-App2.git
+cd Quiz-App2
+```
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+Install dependencies:
 
-## Learn More
+```bash
+npm install
+```
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+If npm reports peer-dependency conflicts:
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+npm install --legacy-peer-deps
+```
 
-### Code Splitting
+Start the development server:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+```bash
+npm start
+```
 
-### Analyzing the Bundle Size
+Open http://localhost:3000 in your browser.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+## Production build
 
-### Making a Progressive Web App
+```bash
+npm run build
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+The production files are generated in the `build` directory.
