@@ -1,12 +1,14 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { questions, quiz } from "../data/questions";
+import QuizResults from "../components/QuizResults";
+import { calculateQuizResults } from "../utils/calculateQuizResults";
 
 const Quiz = () => {
   const [answers, setAnswers] = useState({});
   const [currentQuestionIndex, setCurrentQuestionIndex] =
     useState(0);
-  const [score, setScore] = useState(0);
+  const [quizResults, setQuizResults] = useState(null);
   const [showResults, setShowResults] = useState(false);
   const [error, setError] = useState("");
 
@@ -18,10 +20,6 @@ const Quiz = () => {
 
   const progressPercentage = Math.round(
     ((currentQuestionIndex + 1) / questions.length) * 100
-  );
-
-  const resultPercentage = Math.round(
-    (score / questions.length) * 100
   );
 
   const selectAnswer = (questionId, optionId) => {
@@ -72,18 +70,8 @@ const Quiz = () => {
       return;
     }
 
-    const finalScore = questions.reduce(
-      (total, question) => {
-        const isCorrect =
-          answers[question.id] ===
-          question.correctOptionId;
-
-        return total + (isCorrect ? 1 : 0);
-      },
-      0
-    );
-
-    setScore(finalScore);
+    const results = calculateQuizResults(questions, answers);
+    setQuizResults(results);
     setShowResults(true);
     setError("");
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -92,7 +80,7 @@ const Quiz = () => {
   const tryAgain = () => {
     setAnswers({});
     setCurrentQuestionIndex(0);
-    setScore(0);
+    setQuizResults(null);
     setShowResults(false);
     setError("");
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -122,142 +110,16 @@ const Quiz = () => {
         </header>
 
         {showResults ? (
-          <section>
-            <div className="rounded-2xl bg-white p-6 text-center shadow-sm sm:p-8">
-              <p className="text-sm font-semibold uppercase tracking-[0.18em] text-orange-500">
-                Quiz complete
-              </p>
-
-              <h1 className="mt-3 text-3xl font-bold text-[#10316B] sm:text-4xl">
-                Your result
-              </h1>
-
-              <p className="mt-5 text-5xl font-bold text-slate-900">
-                {resultPercentage}%
-              </p>
-
-              <p className="mt-3 text-lg text-slate-600">
-                {score} out of {questions.length} correct
-              </p>
-
-              <p
-                className={`mt-4 font-semibold ${
-                  resultPercentage >=
-                  quiz.passingPercentage
-                    ? "text-green-700"
-                    : "text-orange-600"
-                }`}
-              >
-                {resultPercentage >=
-                quiz.passingPercentage
-                  ? "Well done! You passed the quiz."
-                  : "Review the explanations and try again."}
-              </p>
-
-              <button
-                type="button"
-                onClick={tryAgain}
-                className="mt-7 rounded-lg bg-[#f57328] px-6 py-3 font-semibold text-white transition hover:bg-orange-500 focus:outline-none focus:ring-2 focus:ring-orange-300"
-              >
-                Try again
-              </button>
-            </div>
-
-            <div className="mt-8">
-              <h2 className="text-2xl font-bold text-[#10316B]">
-                Review your answers
-              </h2>
-
-              <div className="mt-5 space-y-5">
-                {questions.map((question, index) => {
-                  const selectedOption =
-                    question.options.find(
-                      (option) =>
-                        option.id ===
-                        answers[question.id]
-                    );
-
-                  const correctOption =
-                    question.options.find(
-                      (option) =>
-                        option.id ===
-                        question.correctOptionId
-                    );
-
-                  const isCorrect =
-                    answers[question.id] ===
-                    question.correctOptionId;
-
-                  return (
-                    <article
-                      key={question.id}
-                      className="rounded-2xl bg-white p-5 shadow-sm sm:p-6"
-                    >
-                      <div className="flex items-start justify-between gap-4">
-                        <p className="text-sm font-semibold text-slate-500">
-                          Question {index + 1}
-                        </p>
-
-                        <span
-                          className={`rounded-full px-3 py-1 text-xs font-semibold ${
-                            isCorrect
-                              ? "bg-green-100 text-green-700"
-                              : "bg-red-100 text-red-700"
-                          }`}
-                        >
-                          {isCorrect
-                            ? "Correct"
-                            : "Incorrect"}
-                        </span>
-                      </div>
-
-                      <h3 className="mt-3 text-lg font-bold">
-                        {question.prompt}
-                      </h3>
-
-                      <dl className="mt-4 space-y-3 text-sm sm:text-base">
-                        <div>
-                          <dt className="font-semibold text-slate-500">
-                            Your answer
-                          </dt>
-                          <dd
-                            className={
-                              isCorrect
-                                ? "text-green-700"
-                                : "text-red-700"
-                            }
-                          >
-                            {selectedOption?.text}
-                          </dd>
-                        </div>
-
-                        {!isCorrect && (
-                          <div>
-                            <dt className="font-semibold text-slate-500">
-                              Correct answer
-                            </dt>
-                            <dd className="text-green-700">
-                              {correctOption?.text}
-                            </dd>
-                          </div>
-                        )}
-                      </dl>
-
-                      <div className="mt-5 rounded-xl bg-slate-50 p-4">
-                        <p className="text-sm font-semibold text-[#10316B]">
-                          Explanation
-                        </p>
-
-                        <p className="mt-2 leading-7 text-slate-700">
-                          {question.explanation}
-                        </p>
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
-            </div>
-          </section>
+          <QuizResults
+            questions={questions}
+            answers={answers}
+            score={quizResults.totalCorrect}
+            totalQuestions={quizResults.totalQuestions}
+            resultPercentage={quizResults.overallPercentage}
+            passingPercentage={quiz.passingPercentage}
+            onTryAgain={tryAgain}
+            categoryResults={quizResults.categories}
+          />
         ) : (
           <section className="rounded-2xl bg-white p-5 shadow-sm sm:p-8">
             <div>
