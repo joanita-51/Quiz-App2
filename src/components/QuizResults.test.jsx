@@ -81,6 +81,10 @@ const baseProps = {
   totalQuestions: 2,
   passingPercentage: 70,
   categoryResults: fourCategories,
+  coachingStatus: "idle",
+  coachingData: null,
+  coachingError: "",
+  onGenerateCoaching: () => {},
 };
 
 // ---------------------------------------------------------------------------

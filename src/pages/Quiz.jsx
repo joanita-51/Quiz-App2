@@ -12,6 +12,12 @@ const Quiz = () => {
   const [showResults, setShowResults] = useState(false);
   const [error, setError] = useState("");
 
+  // Coaching state
+  const [coachingStatus, setCoachingStatus] = useState("idle");
+  // "idle" | "loading" | "success" | "error"
+  const [coachingData, setCoachingData] = useState(null);
+  const [coachingError, setCoachingError] = useState("");
+
   const currentQuestion = questions[currentQuestionIndex];
 
   const isFirstQuestion = currentQuestionIndex === 0;
@@ -77,12 +83,96 @@ const Quiz = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const generateCoaching = async () => {
+    if (coachingStatus === "loading") return;
+
+    setCoachingStatus("loading");
+    setCoachingError("");
+
+    // Build missedQuestions with readable text (no opaque IDs sent to AI)
+    const missedQuestions = [];
+    for (const cat of quizResults.categories) {
+      for (const missedId of cat.missedQuestionIds) {
+        const question = questions.find((q) => q.id === missedId);
+        if (!question) continue;
+
+        const selectedOptionId = answers[missedId];
+        const selectedOption = selectedOptionId
+          ? question.options.find((o) => o.id === selectedOptionId)
+          : null;
+        const correctOption = question.options.find(
+          (o) => o.id === question.correctOptionId
+        );
+
+        missedQuestions.push({
+          id: question.id,
+          categoryId: question.category,
+          categoryName: cat.categoryName,
+          prompt: question.prompt,
+          selectedAnswerText: selectedOption
+            ? selectedOption.text
+            : "No answer selected",
+          correctAnswerText: correctOption ? correctOption.text : "",
+          explanation: question.explanation,
+        });
+      }
+    }
+
+    const requestBody = {
+      overall: {
+        correct: quizResults.totalCorrect,
+        total: quizResults.totalQuestions,
+        percentage: quizResults.overallPercentage,
+        passed: quizResults.overallPercentage >= quiz.passingPercentage,
+      },
+      categories: quizResults.categories.map((cat) => ({
+        id: cat.categoryId,
+        name: cat.categoryName,
+        correct: cat.correct,
+        total: cat.total,
+        percentage: cat.percentage,
+        level: cat.level,
+      })),
+      missedQuestions,
+    };
+
+    try {
+      const response = await fetch(
+        "/.netlify/functions/generate-coaching",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(requestBody),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.error || "Coaching generation failed. Please try again."
+        );
+      }
+
+      setCoachingData(data);
+      setCoachingStatus("success");
+    } catch (err) {
+      setCoachingError(
+        err.message || "Something went wrong. Please try again."
+      );
+      setCoachingStatus("error");
+    }
+  };
+
   const tryAgain = () => {
     setAnswers({});
     setCurrentQuestionIndex(0);
     setQuizResults(null);
     setShowResults(false);
     setError("");
+    setCoachingStatus("idle");
+    setCoachingData(null);
+    setCoachingError("");
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -119,6 +209,10 @@ const Quiz = () => {
             passingPercentage={quiz.passingPercentage}
             onTryAgain={tryAgain}
             categoryResults={quizResults.categories}
+            coachingStatus={coachingStatus}
+            coachingData={coachingData}
+            coachingError={coachingError}
+            onGenerateCoaching={generateCoaching}
           />
         ) : (
           <section className="rounded-2xl bg-white p-5 shadow-sm sm:p-8">

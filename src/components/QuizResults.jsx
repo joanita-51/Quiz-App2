@@ -1,4 +1,5 @@
 import React from "react";
+import CoachingPanel from "./CoachingPanel";
 
 const RECOMMENDATIONS = {
   "web-fundamentals":
@@ -23,6 +24,10 @@ const QuizResults = ({
   passingPercentage,
   onTryAgain,
   categoryResults = [],
+  coachingStatus = "idle",
+  coachingData = null,
+  coachingError = "",
+  onGenerateCoaching = () => {},
 }) => {
   // ---------------------------------------------------------------------------
   // Summary-selection derived values
@@ -189,6 +194,16 @@ const QuizResults = ({
           )}
         </section>
       )}
+
+      {/* ------------------------------------------------------------------ */}
+      {/* Coaching panel                                                      */}
+      {/* ------------------------------------------------------------------ */}
+      <CoachingPanel
+        coachingStatus={coachingStatus}
+        coachingData={coachingData}
+        coachingError={coachingError}
+        onGenerateCoaching={onGenerateCoaching}
+      />
 
       {/* ------------------------------------------------------------------ */}
       {/* Review your answers                                                 */}
