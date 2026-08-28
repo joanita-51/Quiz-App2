@@ -3,6 +3,11 @@ import { Link } from "react-router-dom";
 import { questions, quiz } from "../data/questions";
 import QuizResults from "../components/QuizResults";
 import { calculateQuizResults } from "../utils/calculateQuizResults";
+import {
+  createAttemptRecord,
+  loadAttempts,
+  saveAttempt,
+} from "../utils/attemptStorage";
 
 const Quiz = () => {
   const [answers, setAnswers] = useState({});
@@ -11,6 +16,9 @@ const Quiz = () => {
   const [quizResults, setQuizResults] = useState(null);
   const [showResults, setShowResults] = useState(false);
   const [error, setError] = useState("");
+  // History is loaded lazily from localStorage on first render.
+  // saveAttempt catches all storage failures, so this never throws.
+  const [attemptHistory, setAttemptHistory] = useState(() => loadAttempts());
 
   // Coaching state
   const [coachingStatus, setCoachingStatus] = useState("idle");
@@ -77,6 +85,18 @@ const Quiz = () => {
     }
 
     const results = calculateQuizResults(questions, answers);
+
+    // Save attempt synchronously inside the event handler (not in a
+    // useEffect) so it fires exactly once per submission and is not
+    // affected by React StrictMode double-invocation of effects.
+    const attempt = createAttemptRecord({
+      quizId: quiz.id,
+      quizResults: results,
+      passingPercentage: quiz.passingPercentage,
+    });
+    const history = saveAttempt(attempt);
+    setAttemptHistory(history);
+
     setQuizResults(results);
     setShowResults(true);
     setError("");
@@ -209,6 +229,7 @@ const Quiz = () => {
             passingPercentage={quiz.passingPercentage}
             onTryAgain={tryAgain}
             categoryResults={quizResults.categories}
+            attemptHistory={attemptHistory}
             coachingStatus={coachingStatus}
             coachingData={coachingData}
             coachingError={coachingError}

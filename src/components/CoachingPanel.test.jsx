@@ -143,6 +143,34 @@ describe('success state', () => {
     ).toBeInTheDocument();
   });
 
+  test('renders "Summary" as a heading', () => {
+    renderSuccess();
+    expect(
+      screen.getByRole('heading', { name: /^summary$/i })
+    ).toBeInTheDocument();
+  });
+
+  test('renders "Strengths" as a heading', () => {
+    renderSuccess();
+    expect(
+      screen.getByRole('heading', { name: /^strengths$/i })
+    ).toBeInTheDocument();
+  });
+
+  test('renders "Areas to improve" as a heading', () => {
+    renderSuccess();
+    expect(
+      screen.getByRole('heading', { name: /^areas to improve$/i })
+    ).toBeInTheDocument();
+  });
+
+  test('renders "Next steps" as a heading', () => {
+    renderSuccess();
+    expect(
+      screen.getByRole('heading', { name: /^next steps$/i })
+    ).toBeInTheDocument();
+  });
+
   test('renders each strength item', () => {
     renderSuccess();
     sampleCoachingData.strengths.forEach((item) => {

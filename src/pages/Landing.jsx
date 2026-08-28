@@ -65,7 +65,7 @@ const Landing = () => {
           </div>
 
           <p className="mt-7 text-sm text-blue-200">
-            10 questions
+            11 questions
             <span className="mx-2" aria-hidden="true">•</span>
             8 minutes
             <span className="mx-2" aria-hidden="true">•</span>
@@ -161,7 +161,7 @@ const Landing = () => {
                 Answer the questions
               </h3>
               <p className="mt-3 leading-7 text-blue-100">
-                Complete ten beginner-friendly questions about web development
+                Complete eleven beginner-friendly questions about web development
                 and AI-assisted coding.
               </p>
             </article>
@@ -258,7 +258,7 @@ const Landing = () => {
         </h2>
 
         <p className="mt-3 text-blue-100">
-          Ten questions. About eight minutes.
+          Eleven questions. About eight minutes.
         </p>
 
         <Link

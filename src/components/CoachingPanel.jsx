@@ -3,7 +3,7 @@ import React from "react";
 /**
  * CoachingPanel
  *
- * Renders the Granite coaching plan UI in four states:
+ * Renders the Meta Llama (hosted through IBM watsonx.ai) coaching plan UI in four states:
  *   idle    — "Generate my coaching plan" button
  *   loading — disabled button with accessible loading indicator
  *   success — structured coaching sections
@@ -92,18 +92,18 @@ const CoachingPanel = ({
 
           {/* Summary */}
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.12em] text-orange-500">
+            <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-orange-500">
               Summary
-            </p>
+            </h3>
             <p className="mt-2 leading-7">{coachingData.summary}</p>
           </div>
 
           {/* Strengths */}
           {coachingData.strengths.length > 0 && (
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.12em] text-orange-500">
+              <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-orange-500">
                 Strengths
-              </p>
+              </h3>
               <ul className="mt-2 space-y-1">
                 {coachingData.strengths.map((item, i) => (
                   <li key={i} className="flex items-start gap-2 leading-7">
@@ -118,9 +118,9 @@ const CoachingPanel = ({
           {/* Improvement areas */}
           {coachingData.improvementAreas.length > 0 && (
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.12em] text-orange-500">
+              <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-orange-500">
                 Areas to improve
-              </p>
+              </h3>
               <ul className="mt-2 space-y-1">
                 {coachingData.improvementAreas.map((item, i) => (
                   <li key={i} className="flex items-start gap-2 leading-7">
@@ -135,9 +135,9 @@ const CoachingPanel = ({
           {/* Next steps */}
           {coachingData.nextSteps.length > 0 && (
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.12em] text-orange-500">
+              <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-orange-500">
                 Next steps
-              </p>
+              </h3>
               <ol className="mt-2 space-y-1 list-none">
                 {coachingData.nextSteps.map((item, i) => (
                   <li key={i} className="flex items-start gap-3 leading-7">
