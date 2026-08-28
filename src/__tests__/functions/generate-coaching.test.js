@@ -6,7 +6,7 @@
  * All IBM network calls are mocked — no real HTTP requests are made.
  * These tests verify: method guard, body-size guard, JSON parse guard,
  * payload validation, missing env vars, timeout handling, IAM failure,
- * watsonx failure, invalid JSON from model, validation failure,
+ * watsonx failure, JSON extraction edge cases, validation failure,
  * and a successful happy path.
  */
 
@@ -200,14 +200,14 @@ test('returns 502 when IAM token fetch throws a non-timeout error', async () => 
 });
 
 // ---------------------------------------------------------------------------
-// 7. watsonx.ai call failure
+// 7. watsonx.ai call failure — network-level throw
 // ---------------------------------------------------------------------------
 
 test('returns 502 when watsonx.ai API call throws a non-timeout error', async () => {
   setEnvVars();
   // IAM succeeds
   mockFetch.mockResolvedValueOnce(mockResponse(200, iamTokenResponse));
-  // watsonx call fails
+  // watsonx call fails at network level
   mockFetch.mockRejectedValueOnce(new Error("Service unavailable"));
   const result = await handler(makeEvent());
   expect(result.statusCode).toBe(502);
@@ -215,22 +215,149 @@ test('returns 502 when watsonx.ai API call throws a non-timeout error', async ()
 });
 
 // ---------------------------------------------------------------------------
+// 7b. watsonx.ai call failure — HTTP non-2xx response (e.g. 403, 502)
+// ---------------------------------------------------------------------------
+
+test('returns generic 502 client response when watsonx.ai returns a non-2xx HTTP status', async () => {
+  setEnvVars();
+  // IAM succeeds
+  mockFetch.mockResolvedValueOnce(mockResponse(200, iamTokenResponse));
+  // watsonx returns HTTP 403 with an IBM-style error body
+  mockFetch.mockResolvedValueOnce({
+    ok: false,
+    status: 403,
+    statusText: "Forbidden",
+    headers: {
+      get: (name) =>
+        name === "x-request-id" ? "ibm-req-abc123" : null,
+    },
+    json: () =>
+      Promise.resolve({
+        error: {
+          code: "insufficient_permissions",
+          message: "The caller does not have the required permissions.",
+        },
+      }),
+  });
+  const result = await handler(makeEvent());
+
+  // Client always receives the generic safe message
+  expect(result.statusCode).toBe(502);
+  const body = JSON.parse(result.body);
+  expect(body.error).toMatch(/ai service is temporarily unavailable/i);
+
+  // Credentials and IBM internals are NOT in the client response
+  expect(result.body).not.toMatch(/test-api-key/);
+  expect(result.body).not.toMatch(/mock-bearer-token/);
+  expect(result.body).not.toMatch(/ibm-req-abc123/);
+  expect(result.body).not.toMatch(/insufficient_permissions/);
+});
+
+test('returns generic 502 when watsonx.ai error body is plain text (not JSON)', async () => {
+  setEnvVars();
+  mockFetch.mockResolvedValueOnce(mockResponse(200, iamTokenResponse));
+  // watsonx returns 502 with a plain-text body (gateway error, not JSON)
+  mockFetch.mockResolvedValueOnce({
+    ok: false,
+    status: 502,
+    statusText: "Bad Gateway",
+    headers: { get: () => null },
+    json: () => Promise.reject(new SyntaxError("Unexpected token")),
+    text: () => Promise.resolve("upstream connect error or disconnect/reset before headers"),
+  });
+  const result = await handler(makeEvent());
+  expect(result.statusCode).toBe(502);
+  expect(JSON.parse(result.body).error).toMatch(/ai service is temporarily unavailable/i);
+  // Plain-text upstream message must not reach the client
+  expect(result.body).not.toMatch(/upstream connect error/);
+});
+
+// ---------------------------------------------------------------------------
+// 7c. watsonx.ai call failure — errors[] array shape
+// ---------------------------------------------------------------------------
+
+test('extracts code and message from errors[] array, still returns generic 502 to browser', async () => {
+  setEnvVars();
+  mockFetch.mockResolvedValueOnce(mockResponse(200, iamTokenResponse));
+  // IBM response using the { errors: [{ code, message }] } shape
+  mockFetch.mockResolvedValueOnce({
+    ok: false,
+    status: 400,
+    statusText: "Bad Request",
+    headers: {
+      get: (name) =>
+        name === "content-type" ? "application/json" : null,
+    },
+    json: () =>
+      Promise.resolve({
+        errors: [
+          {
+            code: "invalid_parameter",
+            message: "Example safe IBM validation message",
+          },
+        ],
+      }),
+  });
+
+  // Spy before calling handler so the module's console.error is intercepted.
+  const consoleSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+
+  const result = await handler(makeEvent());
+
+  // Capture calls BEFORE restoring, then restore immediately.
+  const spyCalls = consoleSpy.mock.calls.slice();
+  consoleSpy.mockRestore();
+
+  // 1. Client always receives the generic safe response.
+  expect(result.statusCode).toBe(502);
+  const body = JSON.parse(result.body);
+  expect(body.error).toMatch(/ai service is temporarily unavailable/i);
+
+  // 2. IBM error details are NOT in the client response body.
+  expect(result.body).not.toMatch(/invalid_parameter/);
+  expect(result.body).not.toMatch(/Example safe IBM validation message/);
+  expect(result.body).not.toMatch(/test-api-key/);
+  expect(result.body).not.toMatch(/mock-bearer-token/);
+
+  // 3. The diagnostic log received the extracted code and message.
+  const diagnosticCall = spyCalls.find(
+    (args) => args[0] === "watsonx.ai API call failed"
+  );
+  expect(diagnosticCall).toBeDefined();
+  const diagnostic = diagnosticCall[1];
+  expect(diagnostic.status).toBe(400);
+  expect(diagnostic.code).toBe("invalid_parameter");
+  expect(diagnostic.message).toBe("Example safe IBM validation message");
+  expect(diagnostic.errorsCount).toBe(1);
+});
+
+// ---------------------------------------------------------------------------
+// Helper — build a mock chat response with model content
+// ---------------------------------------------------------------------------
+
+/**
+ * Returns a mock successful watsonx.ai chat response wrapping the given
+ * content string in the choices[0].message.content shape.
+ */
+function mockChatResponse(content) {
+  return {
+    ok: true,
+    status: 200,
+    json: () =>
+      Promise.resolve({
+        choices: [{ message: { content } }],
+      }),
+  };
+}
+
+// ---------------------------------------------------------------------------
 // 8. Invalid JSON from model output
 // ---------------------------------------------------------------------------
 
 test('returns 502 when model output cannot be parsed as JSON', async () => {
   setEnvVars();
-  // IAM succeeds
   mockFetch.mockResolvedValueOnce(mockResponse(200, iamTokenResponse));
-  // watsonx returns text with no extractable JSON object
-  mockFetch.mockResolvedValueOnce({
-    ok: true,
-    status: 200,
-    json: () =>
-      Promise.resolve({
-        results: [{ generated_text: "Sorry, I cannot answer that." }],
-      }),
-  });
+  mockFetch.mockResolvedValueOnce(mockChatResponse("Sorry, I cannot answer that."));
   const result = await handler(makeEvent());
   expect(result.statusCode).toBe(502);
   expect(JSON.parse(result.body).error).toMatch(/unexpected response/i);
@@ -247,14 +374,7 @@ test('returns 502 when model JSON is structurally invalid', async () => {
     summary: "Good work",
   };
   mockFetch.mockResolvedValueOnce(mockResponse(200, iamTokenResponse));
-  mockFetch.mockResolvedValueOnce({
-    ok: true,
-    status: 200,
-    json: () =>
-      Promise.resolve({
-        results: [{ generated_text: JSON.stringify(badCoaching) }],
-      }),
-  });
+  mockFetch.mockResolvedValueOnce(mockChatResponse(JSON.stringify(badCoaching)));
   const result = await handler(makeEvent());
   expect(result.statusCode).toBe(502);
   expect(JSON.parse(result.body).error).toMatch(/unexpected response/i);
@@ -267,14 +387,7 @@ test('returns 502 when model JSON is structurally invalid', async () => {
 test('returns 200 with structured coaching data on success', async () => {
   setEnvVars();
   mockFetch.mockResolvedValueOnce(mockResponse(200, iamTokenResponse));
-  mockFetch.mockResolvedValueOnce({
-    ok: true,
-    status: 200,
-    json: () =>
-      Promise.resolve({
-        results: [{ generated_text: JSON.stringify(validCoachingResponse) }],
-      }),
-  });
+  mockFetch.mockResolvedValueOnce(mockChatResponse(JSON.stringify(validCoachingResponse)));
   const result = await handler(makeEvent());
   expect(result.statusCode).toBe(200);
   const body = JSON.parse(result.body);
@@ -286,23 +399,17 @@ test('returns 200 with structured coaching data on success', async () => {
 });
 
 // ---------------------------------------------------------------------------
-// 11. Fence-stripping — model output wrapped in markdown fences is handled
+// 11. Fence-stripping — ```json fenced JSON
 // ---------------------------------------------------------------------------
 
-test('returns 200 when model wraps JSON in markdown code fences', async () => {
+test('returns 200 when model wraps JSON in ```json code fences', async () => {
   setEnvVars();
   const fencedOutput = `\`\`\`json\n${JSON.stringify(validCoachingResponse)}\n\`\`\``;
   mockFetch.mockResolvedValueOnce(mockResponse(200, iamTokenResponse));
-  mockFetch.mockResolvedValueOnce({
-    ok: true,
-    status: 200,
-    json: () =>
-      Promise.resolve({ results: [{ generated_text: fencedOutput }] }),
-  });
+  mockFetch.mockResolvedValueOnce(mockChatResponse(fencedOutput));
   const result = await handler(makeEvent());
   expect(result.statusCode).toBe(200);
-  const body = JSON.parse(result.body);
-  expect(body.summary).toBe(validCoachingResponse.summary);
+  expect(JSON.parse(result.body).summary).toBe(validCoachingResponse.summary);
 });
 
 // ---------------------------------------------------------------------------
@@ -311,19 +418,137 @@ test('returns 200 when model wraps JSON in markdown code fences', async () => {
 
 test('returns 200 when missedQuestions array is empty (perfect score)', async () => {
   setEnvVars();
-  const perfectPayload = {
-    ...validPayload,
-    missedQuestions: [],
-  };
+  const perfectPayload = { ...validPayload, missedQuestions: [] };
   mockFetch.mockResolvedValueOnce(mockResponse(200, iamTokenResponse));
-  mockFetch.mockResolvedValueOnce({
-    ok: true,
-    status: 200,
-    json: () =>
-      Promise.resolve({
-        results: [{ generated_text: JSON.stringify(validCoachingResponse) }],
-      }),
-  });
+  mockFetch.mockResolvedValueOnce(mockChatResponse(JSON.stringify(validCoachingResponse)));
   const result = await handler(makeEvent({ body: JSON.stringify(perfectPayload) }));
   expect(result.statusCode).toBe(200);
+});
+
+// ---------------------------------------------------------------------------
+// 13. extractJsonFromText parsing edge cases
+//     These exercise the parser directly via the full handler stack.
+//     All use the chat choices shape.
+// ---------------------------------------------------------------------------
+
+describe('extractJsonFromText parsing', () => {
+  /** Run the handler with a given raw model content string */
+  async function runWith(content) {
+    setEnvVars();
+    jest.resetModules();
+    jest.clearAllMocks();
+    handler = require("../../../netlify/functions/generate-coaching").handler;
+    mockFetch
+      .mockResolvedValueOnce(mockResponse(200, iamTokenResponse))
+      .mockResolvedValueOnce(mockChatResponse(content));
+    return handler(makeEvent());
+  }
+
+  const valid = JSON.stringify(validCoachingResponse);
+
+  test('bare valid JSON — parses successfully', async () => {
+    const result = await runWith(valid);
+    expect(result.statusCode).toBe(200);
+  });
+
+  test('JSON surrounded by whitespace — parses successfully', async () => {
+    const result = await runWith(`   \n  ${valid}  \n  `);
+    expect(result.statusCode).toBe(200);
+  });
+
+  test('```json fenced JSON — parses successfully', async () => {
+    const result = await runWith(`\`\`\`json\n${valid}\n\`\`\``);
+    expect(result.statusCode).toBe(200);
+  });
+
+  test('unlabelled ``` fenced JSON — parses successfully', async () => {
+    const result = await runWith(`\`\`\`\n${valid}\n\`\`\``);
+    expect(result.statusCode).toBe(200);
+  });
+
+  test('prose prefix followed by JSON — balanced-object extraction succeeds', async () => {
+    const result = await runWith(`Here is your coaching result:\n${valid}`);
+    expect(result.statusCode).toBe(200);
+  });
+
+  test('JSON followed by brief prose — balanced-object extraction succeeds', async () => {
+    const result = await runWith(`${valid}\n\nI hope this helps!`);
+    expect(result.statusCode).toBe(200);
+  });
+
+  test('braces inside quoted strings are not mistaken for object boundaries', async () => {
+    // "summary" contains literal braces; the parser must stay in-string mode
+    const tricky = {
+      ...validCoachingResponse,
+      summary: 'Scores look like {"x":1} — keep it up!',
+    };
+    const result = await runWith(JSON.stringify(tricky));
+    expect(result.statusCode).toBe(200);
+    expect(JSON.parse(result.body).summary).toBe(tricky.summary);
+  });
+
+  test('escaped quotes inside strings are handled correctly', async () => {
+    const tricky = {
+      ...validCoachingResponse,
+      encouragement: 'Remember: "practice makes perfect" — keep going!',
+    };
+    const result = await runWith(JSON.stringify(tricky));
+    expect(result.statusCode).toBe(200);
+    expect(JSON.parse(result.body).encouragement).toBe(tricky.encouragement);
+  });
+
+  test('malformed JSON returns 502', async () => {
+    const result = await runWith('{ "summary": "oops", bad json }');
+    expect(result.statusCode).toBe(502);
+    expect(JSON.parse(result.body).error).toMatch(/unexpected response/i);
+  });
+
+  test('no JSON object at all returns 502', async () => {
+    const result = await runWith('Great job! No JSON here at all.');
+    expect(result.statusCode).toBe(502);
+    expect(JSON.parse(result.body).error).toMatch(/unexpected response/i);
+  });
+
+  test('valid JSON with invalid coaching schema returns 502', async () => {
+    // Valid JSON but missing required coaching fields
+    const result = await runWith(JSON.stringify({ foo: "bar" }));
+    expect(result.statusCode).toBe(502);
+    expect(JSON.parse(result.body).error).toMatch(/unexpected response/i);
+  });
+
+  test('missing choices returns 502', async () => {
+    setEnvVars();
+    jest.resetModules();
+    jest.clearAllMocks();
+    handler = require("../../../netlify/functions/generate-coaching").handler;
+    // Override: respond with no choices array
+    mockFetch
+      .mockResolvedValueOnce(mockResponse(200, iamTokenResponse))
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve({ choices: [] }),
+      });
+    const result = await handler(makeEvent());
+    expect(result.statusCode).toBe(502);
+    expect(JSON.parse(result.body).error).toMatch(/ai service is temporarily unavailable/i);
+  });
+
+  test('missing message content returns 502', async () => {
+    setEnvVars();
+    jest.resetModules();
+    jest.clearAllMocks();
+    handler = require("../../../netlify/functions/generate-coaching").handler;
+    mockFetch
+      .mockResolvedValueOnce(mockResponse(200, iamTokenResponse))
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: () =>
+          Promise.resolve({ choices: [{ message: { content: null } }] }),
+      });
+    const result = await handler(makeEvent());
+    expect(result.statusCode).toBe(502);
+    expect(JSON.parse(result.body).error).toMatch(/ai service is temporarily unavailable/i);
+  });
 });

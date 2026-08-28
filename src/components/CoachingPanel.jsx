@@ -31,7 +31,7 @@ const CoachingPanel = ({
         <div className="mt-4">
           <p className="text-sm leading-6 text-slate-600">
             Generate a personalised coaching plan based on your quiz results
-            using IBM watsonx.ai Granite.
+            using IBM watsonx.ai.
           </p>
           <button
             type="button"
