@@ -75,6 +75,22 @@ const tieCategories = [
   { categoryId: 'responsible-ai',    categoryName: 'Responsible AI Coding',  correct: 1, total: 2, percentage: 50, level: 'Developing', missedQuestionIds: [] },
 ];
 
+
+const attemptHistory = [
+  {
+    id: "attempt-1",
+    quizId: "ai-web-development-fundamentals",
+    completedAt: "2026-08-28T12:30:00.000Z",
+    overall: {
+      correct: 9,
+      total: 11,
+      percentage: 82,
+      passed: true,
+    },
+    categories: [],
+  },
+];
+
 // Base props shared by all tests
 const baseProps = {
   questions: [questionA, questionB],
@@ -85,7 +101,9 @@ const baseProps = {
   coachingData: null,
   coachingError: "",
   onGenerateCoaching: () => {},
+  attemptHistory,
 };
+
 
 // ---------------------------------------------------------------------------
 // Existing tests — preserved without modification
@@ -382,5 +400,34 @@ describe('skills summary', () => {
     renderSummary(notAssessedCategories);
     expect(screen.queryByText(/strongest area/i)).not.toBeInTheDocument();
     expect(screen.queryByText(/priority improvement area/i)).not.toBeInTheDocument();
+  });
+
+
+  test("renders recent attempts when history is supplied", () => {
+    render(<QuizResults {...baseProps} answers={allCorrectAnswers}  attemptHistory={attemptHistory}/>);
+
+    expect(
+      screen.getByRole("heading", { name: /recent attempts/i })
+    ).toBeInTheDocument();
+
+    expect(screen.getByText("9 of 11 correct")).toBeInTheDocument();
+  });
+
+  test("renders recent attempts before the answer review", () => {
+    render(<QuizResults {...baseProps}  answers={allCorrectAnswers}  attemptHistory={attemptHistory} />);
+
+    const recentAttemptsHeading = screen.getByRole("heading", {
+      name: /recent attempts/i,
+    });
+
+    const reviewHeading = screen.getByRole("heading", {
+      name: /review your answers/i,
+    });
+
+    const headings = screen.getAllByRole("heading");
+
+    expect(headings.indexOf(recentAttemptsHeading)).toBeLessThan(
+      headings.indexOf(reviewHeading)
+    );
   });
 });

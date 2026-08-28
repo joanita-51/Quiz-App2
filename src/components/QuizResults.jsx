@@ -1,5 +1,6 @@
 import React from "react";
 import CoachingPanel from "./CoachingPanel";
+import RecentAttempts from "./RecentAttempts";
 
 const RECOMMENDATIONS = {
   "web-fundamentals":
@@ -28,6 +29,7 @@ const QuizResults = ({
   coachingData = null,
   coachingError = "",
   onGenerateCoaching = () => {},
+  attemptHistory = [],
 }) => {
   // ---------------------------------------------------------------------------
   // Summary-selection derived values
@@ -204,6 +206,8 @@ const QuizResults = ({
         coachingError={coachingError}
         onGenerateCoaching={onGenerateCoaching}
       />
+
+      <RecentAttempts attemptHistory={attemptHistory} />
 
       {/* ------------------------------------------------------------------ */}
       {/* Review your answers                                                 */}
