@@ -33,7 +33,7 @@ official documentation.
 |---|---|
 | Regional API base URL | Differs between `us-south`, `eu-de`, `au-syd`, and other regions |
 | IAM authentication endpoint | Standard is `https://iam.cloud.ibm.com/identity/token` but should be confirmed |
-| API version date string | IBM watsonx.ai uses a `version` query parameter (e.g. `2023-05-29`); the current supported value must be confirmed |
+| API version date string | IBM watsonx.ai uses a `version` query parameter (e.g. `<WATSONX_API_VERSION>`); the current supported value must be confirmed |
 | Granite model ID | Multiple Granite model IDs exist (`ibm/granite-13b-instruct-v2`, `ibm/granite-3-8b-instruct`, etc.); the correct ID for text generation must be chosen and confirmed available in the account's region |
 | Token limits | `max_new_tokens` appropriate for the coaching JSON response; depends on the model |
 | Project ID vs. Space ID | watsonx.ai generation endpoints accept either a `project_id` or a `space_id`; which is in use must be determined from the account |
