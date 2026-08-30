@@ -203,11 +203,11 @@ const Quiz = () => {
           <Link
             to="/"
             className="text-2xl font-bold tracking-tight text-[#10316B]"
-            aria-label="Quizote home"
+            aria-label="AI Code Quiz home"
           >
-            QuiZ
+            AI Code
             <span className="text-[#f57328]">
-              ote
+              Quiz
             </span>
           </Link>
 

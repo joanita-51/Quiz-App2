@@ -104,6 +104,25 @@ const baseProps = {
   attemptHistory,
 };
 
+function getQuestionSummary(questionNumber, promptPattern) {
+  const promptElement = screen.getByText(promptPattern, {
+    selector: "summary, summary *",
+  });
+
+  const summaryElement = promptElement.closest("summary");
+
+  if (!summaryElement) {
+    throw new Error(
+      `Question ${questionNumber} was found, but it was not inside a summary element.`
+    );
+  }
+
+  expect(summaryElement).toHaveTextContent(
+    new RegExp(`question\\s*${questionNumber}`, "i")
+  );
+
+  return summaryElement;
+}
 
 // ---------------------------------------------------------------------------
 // Existing tests — preserved without modification
@@ -154,7 +173,7 @@ test('failing result — shows fail message', () => {
   ).toBeInTheDocument();
 });
 
-test('correct answer display — selected answer text shown', () => {
+test("correct answer display — selected answer shown after choosing show all", async () => {
   render(
     <QuizResults
       {...baseProps}
@@ -164,10 +183,19 @@ test('correct answer display — selected answer text shown', () => {
       onTryAgain={() => {}}
     />
   );
-  expect(screen.getByText('Four')).toBeInTheDocument();
+
+  await userEvent.click(
+    screen.getByRole("button", { name: /show all 2 answers/i })
+  );
+
+  await userEvent.click(
+    getQuestionSummary(1, /what is 2 \+ 2\?/i)
+  );
+
+  expect(screen.getByText("Four")).toBeInTheDocument();
 });
 
-test('incorrect answer display — wrong choice and correct answer both shown', () => {
+test('incorrect answer display — wrong choice and correct answers shown after expanding', () => {
   render(
     <QuizResults
       {...baseProps}
@@ -177,11 +205,16 @@ test('incorrect answer display — wrong choice and correct answer both shown', 
       onTryAgain={() => {}}
     />
   );
+
+  userEvent.click(
+    getQuestionSummary(2, /what colour is the sky/i)
+  );
+
   expect(screen.getByText('Red')).toBeInTheDocument();
   expect(screen.getByText('Blue')).toBeInTheDocument();
 });
 
-test('explanation display — explanation text shown', () => {
+test("explanation display — explanation shown after expanding an answer", async () => {
   render(
     <QuizResults
       {...baseProps}
@@ -191,7 +224,18 @@ test('explanation display — explanation text shown', () => {
       onTryAgain={() => {}}
     />
   );
-  expect(screen.getByText('2 plus 2 equals 4.')).toBeInTheDocument();
+
+  await userEvent.click(
+    screen.getByRole("button", { name: /show all 2 answers/i })
+  );
+
+  await userEvent.click(
+    getQuestionSummary(1, /what is 2 \+ 2\?/i)
+  );
+
+  expect(
+    screen.getByText("2 plus 2 equals 4.")
+  ).toBeInTheDocument();
 });
 
 test('try again callback — called once when button clicked', () => {
@@ -346,15 +390,20 @@ describe('skills summary', () => {
     ).toBeInTheDocument();
   });
 
-  test('priority improvement area text identifies the lowest-percentage category', () => {
+  test('priority area identifies the lowest-percentage category', () => {
     renderSummary(fourCategories);
     // catTD has percentage 0 — lowest
     expect(
-      screen.getByText((_, el) =>
-        el?.tagName === 'P' &&
-        /priority improvement area:/i.test(el.textContent) &&
-        /testing and debugging/i.test(el.textContent)
-      )
+      screen.getByText((_, element) => {
+        if (element?.tagName !== 'P'){
+          return false;
+        }
+
+        return (
+          /priority area:/i.test(element.textContent) &&
+          /testing and debugging/i.test(element.textContent)
+        )
+      })
     ).toBeInTheDocument();
   });
 
@@ -384,7 +433,7 @@ describe('skills summary', () => {
   test('tie: no strongest/priority labels shown', () => {
     renderSummary(tieCategories);
     expect(screen.queryByText(/strongest area/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/priority improvement area/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/priority area/i)).not.toBeInTheDocument();
   });
 
   test('no-assessment: fallback message shown', () => {
@@ -399,7 +448,7 @@ describe('skills summary', () => {
   test('no-assessment: no strongest/priority labels shown', () => {
     renderSummary(notAssessedCategories);
     expect(screen.queryByText(/strongest area/i)).not.toBeInTheDocument();
-    expect(screen.queryByText(/priority improvement area/i)).not.toBeInTheDocument();
+    expect(screen.queryByText(/priority area/i)).not.toBeInTheDocument();
   });
 
 
@@ -413,7 +462,7 @@ describe('skills summary', () => {
     expect(screen.getByText("9 of 11 correct")).toBeInTheDocument();
   });
 
-  test("renders recent attempts before the answer review", () => {
+  test("renders recent attempts after the answer review", () => {
     render(<QuizResults {...baseProps}  answers={allCorrectAnswers}  attemptHistory={attemptHistory} />);
 
     const recentAttemptsHeading = screen.getByRole("heading", {
@@ -426,8 +475,40 @@ describe('skills summary', () => {
 
     const headings = screen.getAllByRole("heading");
 
-    expect(headings.indexOf(recentAttemptsHeading)).toBeLessThan(
+    expect(headings.indexOf(recentAttemptsHeading)).toBeGreaterThan(
       headings.indexOf(reviewHeading)
     );
   });
+
+  test("skills summary is hidden after personalized coaching succeeds", () => {
+    render(
+      <QuizResults
+        {...baseProps}
+        answers={oneWrongAnswers}
+        score={1}
+        resultPercentage={50}
+        coachingStatus="success"
+        coachingData={{
+          summary: "A personalized summary.",
+          strengths: ["Web fundamentals"],
+          improvementAreas: ["Testing and debugging"],
+          nextSteps: ["Write a scoring test"],
+          encouragement: "Keep practising.",
+        }}
+        onTryAgain={() => {}}
+      />
+    );
+
+    expect(
+      screen.queryByRole("heading", { name: /skills summary/i })
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.getByRole("heading", {
+        name: /personalised coaching plan/i,
+      })
+    ).toBeInTheDocument();
+  });
+
+
 });
