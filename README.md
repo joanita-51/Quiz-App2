@@ -2,7 +2,7 @@
 
 AI Code Quiz is a responsive learning application that helps beginner web developers assess their web-development knowledge and learn how to review AI-generated code safely.
 
-[View the live application]((https://ai-code-quiz.netlify.app/))
+[View the live application](https://ai-code-quiz.netlify.app/)
 
 ## Problem statement
 
