@@ -10,9 +10,9 @@ const Landing = () => {
           <Link
             to="/"
             className="text-2xl font-bold tracking-tight sm:text-3xl"
-            aria-label="Quizote home"
+            aria-label="AI Code Quiz home"
           >
-            QuiZ<span className="text-[#f57328]">ote</span>
+            AI Code<span className="text-[#f57328]">Quiz</span>
           </Link>
 
           <div className="hidden items-center gap-8 md:flex">
@@ -274,9 +274,9 @@ const Landing = () => {
           <Link
             to="/"
             className="text-xl font-bold text-white"
-            aria-label="Quizote home"
+            aria-label="AI Code Quiz home"
           >
-            QuiZ<span className="text-[#f57328]">ote</span>
+            AI Code<span className="text-[#f57328]">Quiz</span>
           </Link>
 
           <p>

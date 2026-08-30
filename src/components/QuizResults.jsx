@@ -174,42 +174,6 @@ const QuizResults = ({
       {/* ------------------------------------------------------------------ */}
       {/* Skills summary                                                      */}
       {/* ------------------------------------------------------------------ */}
-      {/*
-      {categoryResults.length > 0 && (
-        <section className="mt-6 rounded-2xl bg-white p-5 shadow-sm sm:p-6">
-          <h2 className="text-xl font-bold text-[#10316B]">
-            Skills summary
-          </h2>
-
-          {assessedCategories.length === 0 ? (
-            <p className="mt-3 leading-7 text-slate-700">
-              Complete an assessed quiz to receive a skills summary.
-            </p>
-          ) : allEqual ? (
-            <p className="mt-3 leading-7 text-slate-700">
-              Your results are currently even across the assessed skills.
-            </p>
-          ) : (
-            <div className="mt-3 space-y-2 text-slate-700">
-              <p>
-                <span className="font-semibold">Strongest area:</span>{" "}
-                {strongestCategory.categoryName}
-              </p>
-              <p>
-                <span className="font-semibold">
-                  Priority improvement area:
-                </span>{" "}
-                {priorityCategory.categoryName}
-              </p>
-              <p className="mt-3 leading-7">
-                {RECOMMENDATIONS[priorityCategory.categoryId] ??
-                  FALLBACK_RECOMMENDATION}
-              </p>
-            </div>
-          )}
-        </section>
-      )}
-        */}
 
       {coachingStatus !== "success" && categoryResults.length > 0 && (
         <section
