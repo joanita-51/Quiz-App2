@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import CoachingPanel from './CoachingPanel';
 
@@ -128,7 +128,22 @@ describe('error state', () => {
 // ---------------------------------------------------------------------------
 
 describe('success state', () => {
-  const renderSuccess = () =>
+  const renderSuccess = async () => {
+    const result = render(
+      <CoachingPanel
+        coachingStatus="success"
+        coachingData={sampleCoachingData}
+      />
+    );
+
+    await userEvent.click(
+      screen.getByText(/view full coaching plan/i)
+    );
+
+    return result;
+  };
+
+  test("shows the primary focus area before expanding", () => {
     render(
       <CoachingPanel
         coachingStatus="success"
@@ -136,99 +151,173 @@ describe('success state', () => {
       />
     );
 
-  test('renders the summary text', () => {
-    renderSuccess();
+    const focusLabel = screen.getByText(/your focus area/i);
+    const focusCard = focusLabel.closest("div");
+
+    expect(focusCard).not.toBeNull();
+
+    expect(
+      within(focusCard).getByText(
+        sampleCoachingData.improvementAreas[0]
+      )
+    ).toBeInTheDocument();
+  });
+
+  test("shows the first recommended step before expanding", () => {
+    render(
+      <CoachingPanel
+        coachingStatus="success"
+        coachingData={sampleCoachingData}
+      />
+    );
+
+    const recommendationLabel = screen.getByText(
+      /recommended next step/i
+    );
+
+    const recommendationCard =
+      recommendationLabel.closest("div");
+
+    expect(recommendationCard).not.toBeNull();
+
+    expect(
+      within(recommendationCard).getByText(
+        sampleCoachingData.nextSteps[0]
+      )
+    ).toBeInTheDocument();
+  });
+
+  test("full coaching plan is collapsed initially", () => {
+    render(
+      <CoachingPanel
+        coachingStatus="success"
+        coachingData={sampleCoachingData}
+      />
+    );
+
+    const toggle = screen.getByText(/view full coaching plan/i);
+    const details = toggle.closest("details");
+
+    expect(details).not.toBeNull();
+    expect(details).not.toHaveAttribute("open");
+  });
+
+  test("renders the summary text", async () => {
+    await renderSuccess();
+
     expect(
       screen.getByText(sampleCoachingData.summary)
     ).toBeInTheDocument();
   });
 
-  test('renders "Summary" as a heading', () => {
-    renderSuccess();
+    test('renders "Summary" as a heading', async () => {
+    await renderSuccess();
+
     expect(
-      screen.getByRole('heading', { name: /^summary$/i })
+      screen.getByRole("heading", { name: /^summary$/i })
     ).toBeInTheDocument();
   });
 
-  test('renders "Strengths" as a heading', () => {
-    renderSuccess();
+  test('renders "Strengths" as a heading', async () => {
+    await renderSuccess();
+
     expect(
-      screen.getByRole('heading', { name: /^strengths$/i })
+      screen.getByRole("heading", { name: /^strengths$/i })
     ).toBeInTheDocument();
   });
 
-  test('renders "Areas to improve" as a heading', () => {
-    renderSuccess();
+  test('renders "Areas to improve" as a heading', async () => {
+    await renderSuccess();
+
     expect(
-      screen.getByRole('heading', { name: /^areas to improve$/i })
+      screen.getByRole("heading", { name: /^areas to improve$/i })
     ).toBeInTheDocument();
   });
 
-  test('renders "Next steps" as a heading', () => {
-    renderSuccess();
+  test('renders "Next steps" as a heading', async () => {
+    await renderSuccess();
+
     expect(
-      screen.getByRole('heading', { name: /^next steps$/i })
+      screen.getByRole("heading", { name: /^next steps$/i })
     ).toBeInTheDocument();
   });
 
-  test('renders each strength item', () => {
-    renderSuccess();
+  test("renders each strength item", async () => {
+    await renderSuccess();
+
     sampleCoachingData.strengths.forEach((item) => {
       expect(screen.getByText(item)).toBeInTheDocument();
     });
   });
 
-  test('renders each improvement area item', () => {
-    renderSuccess();
+  test("renders each improvement area in the full plan", async () => {
+    await renderSuccess();
+
+    const fullPlan = screen
+      .getByText(/view full coaching plan/i)
+      .closest("details");
+
+    expect(fullPlan).not.toBeNull();
+
     sampleCoachingData.improvementAreas.forEach((item) => {
-      expect(screen.getByText(item)).toBeInTheDocument();
+      expect(
+        within(fullPlan).getByText(item)
+      ).toBeInTheDocument();
     });
   });
 
-  test('renders all three next steps with numbered badges', () => {
-    renderSuccess();
+  test("renders all three next steps", async () => {
+    await renderSuccess();
+
     sampleCoachingData.nextSteps.forEach((item) => {
-      expect(screen.getByText(item)).toBeInTheDocument();
+      expect(screen.getAllByText(item).length).toBeGreaterThan(0);
     });
-    // Numbered badges 1–3
-    expect(screen.getByText('1')).toBeInTheDocument();
-    expect(screen.getByText('2')).toBeInTheDocument();
-    expect(screen.getByText('3')).toBeInTheDocument();
   });
 
-  test('renders the encouragement text', () => {
-    renderSuccess();
+  test("renders the encouragement text", async () => {
+    await renderSuccess();
+
     expect(
       screen.getByText(sampleCoachingData.encouragement)
     ).toBeInTheDocument();
   });
-});
 
+});
 // ---------------------------------------------------------------------------
 // HTML-as-text safety — model output must never be injected as raw HTML
 // ---------------------------------------------------------------------------
 
-test('HTML tags in model output are rendered as plain text, not injected as HTML', () => {
-  const maliciousData = {
-    summary: '<script>alert("xss")</script>',
-    strengths: ['<b>Bold claim</b>'],
-    improvementAreas: ['<img src=x onerror=alert(1)>'],
-    nextSteps: ['<a href="evil">Click</a>', 'Step 2', 'Step 3'],
-    encouragement: '<em>Well done</em>',
-  };
-  render(
-    <CoachingPanel
-      coachingStatus="success"
-      coachingData={maliciousData}
-    />
-  );
+test(
+  "HTML tags in model output are rendered as plain text, not injected as HTML",
+  async () => {
+    const maliciousData = {
+      summary: '<script>alert("xss")</script>',
+      strengths: ["<b>Bold claim</b>"],
+      improvementAreas: ["<img src=x onerror=alert(1)>"],
+      nextSteps: ['<a href="evil">Click</a>', "Step 2", "Step 3"],
+      encouragement: "<em>Well done</em>",
+    };
 
-  // The raw tag strings appear as visible text, not interpreted as elements
-  expect(screen.getByText('<script>alert("xss")</script>')).toBeInTheDocument();
-  expect(screen.getByText('<b>Bold claim</b>')).toBeInTheDocument();
+    render(
+      <CoachingPanel
+        coachingStatus="success"
+        coachingData={maliciousData}
+      />
+    );
 
-  // No <script> elements exist in the DOM
-  expect(document.querySelector('script[src]')).toBeNull();
-  // No unexpected <b> elements injected by model output
-  expect(document.querySelector('b')).toBeNull();
-});
+    await userEvent.click(
+      screen.getByText(/view full coaching plan/i)
+    );
+
+    expect(
+      screen.getByText('<script>alert("xss")</script>')
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText("<b>Bold claim</b>")
+    ).toBeInTheDocument();
+
+    expect(document.querySelector("script")).toBeNull();
+    expect(document.querySelector("b")).toBeNull();
+  }
+);

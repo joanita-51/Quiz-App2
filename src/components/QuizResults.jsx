@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import CoachingPanel from "./CoachingPanel";
 import RecentAttempts from "./RecentAttempts";
 
@@ -31,6 +31,17 @@ const QuizResults = ({
   onGenerateCoaching = () => {},
   attemptHistory = [],
 }) => {
+
+  const [showAllAnswers, setShowAllAnswers] = useState(false);
+
+  const incorrectQuestions = questions.filter(
+    (question) => answers[question.id] !== question.correctOptionId
+  );
+
+  const questionsToReview = showAllAnswers
+  ? questions
+  : incorrectQuestions;
+
   // ---------------------------------------------------------------------------
   // Summary-selection derived values
   // ---------------------------------------------------------------------------
@@ -103,6 +114,7 @@ const QuizResults = ({
       {/* ------------------------------------------------------------------ */}
       {/* Skills breakdown                                                    */}
       {/* ------------------------------------------------------------------ */}
+    
       {categoryResults.length > 0 && (
         <section className="mt-8">
           <h2 className="text-2xl font-bold text-[#10316B]">
@@ -158,10 +170,11 @@ const QuizResults = ({
           </div>
         </section>
       )}
-
+    
       {/* ------------------------------------------------------------------ */}
       {/* Skills summary                                                      */}
       {/* ------------------------------------------------------------------ */}
+      {/*
       {categoryResults.length > 0 && (
         <section className="mt-6 rounded-2xl bg-white p-5 shadow-sm sm:p-6">
           <h2 className="text-xl font-bold text-[#10316B]">
@@ -196,6 +209,49 @@ const QuizResults = ({
           )}
         </section>
       )}
+        */}
+
+      {coachingStatus !== "success" && categoryResults.length > 0 && (
+        <section
+          aria-labelledby="skills-summary-heading"
+          className="mt-6 rounded-2xl bg-white p-6 shadow-sm"
+        >
+          <h2
+            id="skills-summary-heading"
+            className="text-xl font-bold text-[#10316B]"
+          >
+            Skills summary
+          </h2>
+
+          {assessedCategories.length === 0 ? (
+            <p className="mt-3 text-slate-700">
+              Complete an assessed quiz to receive a skills summary.
+            </p>
+          ) : allEqual ? (
+            <p className="mt-3 text-slate-700">
+              Your results are currently even across the assessed skills.
+            </p>
+          ) : (
+            <div className="mt-3 space-y-2 text-slate-700">
+              <p>
+                <span className="font-semibold">Strongest area:</span>{" "}
+                {strongestCategory.categoryName}
+              </p>
+
+              <p>
+                <span className="font-semibold">Priority area:</span>{" "}
+                {priorityCategory.categoryName}
+              </p>
+
+              <p>
+                <span className="font-semibold">Recommended activity:</span>{" "}
+                {RECOMMENDATIONS[priorityCategory.categoryId] ||
+                  FALLBACK_RECOMMENDATION}
+              </p>
+            </div>
+          )}
+        </section>
+      )}
 
       {/* ------------------------------------------------------------------ */}
       {/* Coaching panel                                                      */}
@@ -207,11 +263,10 @@ const QuizResults = ({
         onGenerateCoaching={onGenerateCoaching}
       />
 
-      <RecentAttempts attemptHistory={attemptHistory} />
-
       {/* ------------------------------------------------------------------ */}
       {/* Review your answers                                                 */}
       {/* ------------------------------------------------------------------ */}
+      {/*
       <div className="mt-8">
         <h2 className="text-2xl font-bold text-[#10316B]">
           Review your answers
@@ -295,6 +350,132 @@ const QuizResults = ({
           })}
         </div>
       </div>
+      */}
+      <section
+        aria-labelledby="answer-review-heading"
+        className="mt-8 rounded-2xl bg-white p-5 shadow-sm sm:p-6"
+      >
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <h2
+              id="answer-review-heading"
+              className="text-2xl font-bold text-[#10316B]"
+            >
+              Review your answers
+            </h2>
+
+            <p className="mt-1 text-sm text-slate-600">
+              {incorrectQuestions.length === 0
+                ? "You answered every question correctly."
+                : `${incorrectQuestions.length} ${
+                    incorrectQuestions.length === 1
+                      ? "question needs"
+                      : "questions need"
+                  } attention.`}
+            </p>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setShowAllAnswers((current) => !current)}
+            className="self-start rounded-lg border border-[#10316B] px-4 py-2 text-sm font-semibold text-[#10316B] transition hover:bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-300"
+          >
+            {showAllAnswers
+              ? "Show incorrect only"
+              : `Show all ${questions.length} answers`}
+          </button>
+        </div>
+
+        {!showAllAnswers && incorrectQuestions.length === 0 ? (
+          <p className="mt-5 rounded-xl bg-green-50 p-4 text-green-800">
+            There are no incorrect answers to review.
+          </p>
+        ) : (
+          <div className="mt-5 space-y-3">
+            {questionsToReview.map((question) => {
+              const questionNumber =
+                questions.findIndex((item) => item.id === question.id) + 1;
+
+              const selectedOption = question.options.find(
+                (option) => option.id === answers[question.id]
+              );
+
+              const correctOption = question.options.find(
+                (option) => option.id === question.correctOptionId
+              );
+
+              const isCorrect =
+                answers[question.id] === question.correctOptionId;
+
+              return (
+                <details
+                  key={question.id}
+                  className="rounded-xl border border-slate-200 bg-slate-50"
+                >
+                  <summary className="cursor-pointer px-4 py-4">
+                    <span
+                      className={`text-sm font-semibold ${
+                        isCorrect ? "text-green-700" : "text-red-700"
+                      }`}
+                    >
+                      {isCorrect ? "Correct" : "Needs review"}
+                    </span>
+
+                    <span className="ml-2 font-semibold text-slate-900">
+                      Question {questionNumber}: {question.prompt}
+                    </span>
+                  </summary>
+
+                  <div className="border-t border-slate-200 px-4 py-4">
+                    <dl className="space-y-3 text-sm sm:text-base">
+                      <div>
+                        <dt className="font-semibold text-slate-500">
+                          Your answer
+                        </dt>
+
+                        <dd
+                          className={
+                            isCorrect ? "text-green-700" : "text-red-700"
+                          }
+                        >
+                          {selectedOption?.text || "No answer selected"}
+                        </dd>
+                      </div>
+
+                      {!isCorrect && (
+                        <div>
+                          <dt className="font-semibold text-slate-500">
+                            Correct answer
+                          </dt>
+
+                          <dd className="text-green-700">
+                            {correctOption?.text}
+                          </dd>
+                        </div>
+                      )}
+                    </dl>
+
+                    <div className="mt-4 rounded-lg bg-white p-4">
+                      <p className="text-sm font-semibold text-[#10316B]">
+                        Explanation
+                      </p>
+
+                      <p className="mt-2 leading-7 text-slate-700">
+                        {question.explanation}
+                      </p>
+                    </div>
+                  </div>
+                </details>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
+
+        {/* Recent attempts */}
+      <RecentAttempts attemptHistory={attemptHistory} />
+
     </section>
   );
 };

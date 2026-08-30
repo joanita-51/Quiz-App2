@@ -87,74 +87,89 @@ const CoachingPanel = ({
       {/* ------------------------------------------------------------------ */}
       {/* Success state                                                       */}
       {/* ------------------------------------------------------------------ */}
+      {/* Success state */}
       {coachingStatus === "success" && coachingData && (
-        <div className="mt-5 space-y-6 text-slate-700">
+        <div className="mt-5">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="rounded-xl bg-orange-50 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-orange-600">
+                Your focus area
+              </p>
 
-          {/* Summary */}
-          <div>
-            <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-orange-500">
-              Summary
-            </h3>
-            <p className="mt-2 leading-7">{coachingData.summary}</p>
+              <p className="mt-2 font-semibold leading-6 text-slate-900">
+                {coachingData.improvementAreas?.[0] ||
+                  "Continue strengthening your development skills."}
+              </p>
+            </div>
+
+            <div className="rounded-xl bg-slate-50 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.12em] text-[#10316B]">
+                Recommended next step
+              </p>
+
+              <p className="mt-2 font-semibold leading-6 text-slate-900">
+                {coachingData.nextSteps?.[0] ||
+                  "Review your answers and practise the concepts you missed."}
+              </p>
+            </div>
           </div>
 
-          {/* Strengths */}
-          {coachingData.strengths.length > 0 && (
-            <div>
-              <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-orange-500">
-                Strengths
-              </h3>
-              <ul className="mt-2 space-y-1">
-                {coachingData.strengths.map((item, i) => (
-                  <li key={i} className="flex items-start gap-2 leading-7">
-                    <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+          <details className="mt-5 rounded-xl border border-slate-200">
+            <summary className="cursor-pointer px-4 py-3 font-semibold text-[#10316B]">
+              View full coaching plan
+            </summary>
 
-          {/* Improvement areas */}
-          {coachingData.improvementAreas.length > 0 && (
-            <div>
-              <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-orange-500">
-                Areas to improve
-              </h3>
-              <ul className="mt-2 space-y-1">
-                {coachingData.improvementAreas.map((item, i) => (
-                  <li key={i} className="flex items-start gap-2 leading-7">
-                    <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-orange-400" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
+            <div className="space-y-5 border-t border-slate-200 px-4 py-5 text-slate-700">
+              <div>
+                <h3 className="font-bold text-slate-900">Summary</h3>
+                <p className="mt-2 leading-7">{coachingData.summary}</p>
+              </div>
 
-          {/* Next steps */}
-          {coachingData.nextSteps.length > 0 && (
-            <div>
-              <h3 className="text-sm font-semibold uppercase tracking-[0.12em] text-orange-500">
-                Next steps
-              </h3>
-              <ol className="mt-2 space-y-1 list-none">
-                {coachingData.nextSteps.map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 leading-7">
-                    <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#10316B] text-xs font-bold text-white">
-                      {i + 1}
-                    </span>
-                    {item}
-                  </li>
-                ))}
-              </ol>
-            </div>
-          )}
+              {coachingData.strengths?.length > 0 && (
+                <div>
+                  <h3 className="font-bold text-slate-900">Strengths</h3>
 
-          {/* Encouragement */}
-          <div className="rounded-xl bg-slate-50 p-4">
-            <p className="leading-7">{coachingData.encouragement}</p>
-          </div>
+                  <ul className="mt-2 list-disc space-y-1 pl-5">
+                    {coachingData.strengths.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {coachingData.improvementAreas?.length > 0 && (
+                <div>
+                  <h3 className="font-bold text-slate-900">
+                    Areas to improve
+                  </h3>
+
+                  <ul className="mt-2 list-disc space-y-1 pl-5">
+                    {coachingData.improvementAreas.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {coachingData.nextSteps?.length > 0 && (
+                <div>
+                  <h3 className="font-bold text-slate-900">Next steps</h3>
+
+                  <ol className="mt-2 list-decimal space-y-1 pl-5">
+                    {coachingData.nextSteps.map((item, index) => (
+                      <li key={index}>{item}</li>
+                    ))}
+                  </ol>
+                </div>
+              )}
+
+              {coachingData.encouragement && (
+                <p className="rounded-xl bg-slate-50 p-4 leading-7">
+                  {coachingData.encouragement}
+                </p>
+              )}
+            </div>
+          </details>
         </div>
       )}
     </section>
